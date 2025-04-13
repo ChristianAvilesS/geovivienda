@@ -26,7 +26,7 @@ public class RolController {
     private IRolService servicio;
 
     @GetMapping("/")
-    public List<RolDTO> obtenerRols() {
+    public List<RolDTO> obtenerRoles() {
         var roles = servicio.listarRoles();
         roles.forEach((rol) -> logger.info(rol.toString()));
         return roles.stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());

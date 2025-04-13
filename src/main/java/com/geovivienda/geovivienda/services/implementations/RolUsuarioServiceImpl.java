@@ -1,7 +1,7 @@
 package com.geovivienda.geovivienda.services.implementations;
 
-import com.geovivienda.geovivienda.entities.PK_RolUsuario;
 import com.geovivienda.geovivienda.entities.RolUsuario;
+import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import com.geovivienda.geovivienda.repositories.IRolUsuarioRepository;
 import com.geovivienda.geovivienda.services.interfaces.IRolUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ public class RolUsuarioServiceImpl implements IRolUsuarioService {
     }
 
     @Override
-    public RolUsuario buscarRolUsuarioPorId(PK_RolUsuario id) {
+    public RolUsuario buscarRolUsuarioPorId(RolUsuarioId id) {
         return repos.findById(id).orElse(null);
     }
 

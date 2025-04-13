@@ -1,26 +1,29 @@
 package com.geovivienda.geovivienda.entities;
 
-import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "roles_x_usuario")
-public class RolUsuario {
-    @EmbeddedId
-    private RolUsuarioId id;
+@Table(name = "valoraciones")
+public class Valoracion {
+    @Id
+    @Column(name = "id_valoracion", nullable = false)
+    private Integer id;
 
-    @MapsId("idUsuario")
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario idUsuario;
 
-    @MapsId("idRol")
+    @Column(name = "rating", precision = 2, scale = 1)
+    private BigDecimal rating;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_rol", nullable = false)
-    private Rol idRol;
+    @JoinColumn(name = "id_inmueble", nullable = false)
+    private Inmueble idInmueble;
 
 }

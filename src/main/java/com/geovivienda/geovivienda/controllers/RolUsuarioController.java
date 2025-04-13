@@ -1,8 +1,8 @@
 package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.RolUsuarioDTO;
-import com.geovivienda.geovivienda.entities.PK_RolUsuario;
 import com.geovivienda.geovivienda.entities.RolUsuario;
+import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IRolUsuarioService;
 import org.modelmapper.ModelMapper;
@@ -40,8 +40,8 @@ public class RolUsuarioController {
         return modelM.map(rolUsuarioGuardado, RolUsuarioDTO.class);
     }
 
-    @GetMapping("/")
-    public ResponseEntity<RolUsuarioDTO> obtenerRolUsuarioPorId(@RequestBody PK_RolUsuario id) {
+    @GetMapping("/id/")
+    public ResponseEntity<RolUsuarioDTO> obtenerRolUsuarioPorId(@RequestBody RolUsuarioId id) {
         RolUsuario rolUsuario = servicio.buscarRolUsuarioPorId(id);
         if (rolUsuario != null) {
             return ResponseEntity.ok(modelM.map(rolUsuario, RolUsuarioDTO.class));
@@ -50,7 +50,7 @@ public class RolUsuarioController {
     }
 
     @DeleteMapping("/")
-    public ResponseEntity<Map<String, Boolean>> eliminarRolUsuario(@RequestBody PK_RolUsuario id) {
+    public ResponseEntity<Map<String, Boolean>> eliminarRolUsuario(@RequestBody RolUsuarioId id) {
         var rolUsuario = servicio.buscarRolUsuarioPorId(id);
         servicio.eliminarRolUsuario(rolUsuario);
         Map<String, Boolean> respuesta = new HashMap<>();

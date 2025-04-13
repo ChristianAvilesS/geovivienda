@@ -1,31 +1,28 @@
 package com.geovivienda.geovivienda.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
-@Entity
-@Table(name = "direcciones")
-@NoArgsConstructor
-@AllArgsConstructor
+import java.math.BigDecimal;
+
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode
+@Entity
+@Table(name = "direcciones")
 public class Direccion {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_direccion")
-    private Integer idDireccion;
+    @Column(name = "id_direccion", nullable = false)
+    private Integer id;
 
-    @Column(length = 100)
+    @Column(name = "direccion", length = 100)
     private String direccion;
 
-    private double latitud;
+    @Column(name = "longitud", precision = 11, scale = 3)
+    private BigDecimal longitud;
 
-    private double longitud;
+    @Column(name = "latitud", precision = 11, scale = 3)
+    private BigDecimal latitud;
 
-    public Direccion(Integer idDireccion) {
-        this.idDireccion = idDireccion;
-    }
 }

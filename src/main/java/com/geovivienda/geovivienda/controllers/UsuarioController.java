@@ -51,7 +51,7 @@ public class UsuarioController {
         Usuario usuario = this.servicio.buscarUsuarioPorId(id);
         usuario.setNombre(usuarioRecibido.getNombre());
         usuario.setTelefono(usuarioRecibido.getTelefono());
-        usuario.setDireccion(usuarioRecibido.getDireccion());
+        usuario.setIdDireccion(usuarioRecibido.getIdDireccion());
         usuario.setEmail(usuarioRecibido.getEmail());
 
         this.servicio.guardarUsuario(usuario);
