@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IRolUsuarioService {
 
-    public List<RolUsuario> listarRolUsuarioes();
+    public List<RolUsuario> listarRolesUsuario();
     public RolUsuario buscarRolUsuarioPorId(PK_RolUsuario id);
 
     // Cumple la función de insertar y actualizar

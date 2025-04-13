@@ -8,7 +8,6 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("geovivienda/usuarios")
 public class UsuarioController {
     private static final Logger logger = LoggerFactory.getLogger(UsuarioController.class);
-    private final ModelMapper modelM = new ModelMapper();;
+    private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
     private IUsuarioService servicio;
@@ -28,9 +27,7 @@ public class UsuarioController {
     public List<UsuarioDTO> obtenerUsuarios() {
         var usuarios = servicio.listarUsuarioes();
         usuarios.forEach((usuario) -> logger.info(usuario.toString()));
-        return usuarios.stream().map(p -> {
-            return modelM.map(p, UsuarioDTO.class);
-        }).collect(Collectors.toList());
+        return usuarios.stream().map(p -> modelM.map(p, UsuarioDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping("/")

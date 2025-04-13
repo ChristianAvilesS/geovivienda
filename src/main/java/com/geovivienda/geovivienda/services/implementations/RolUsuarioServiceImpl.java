@@ -16,7 +16,7 @@ public class RolUsuarioServiceImpl implements IRolUsuarioService {
     private IRolUsuarioRepository repos;
 
     @Override
-    public List<RolUsuario> listarRolUsuarioes() {
+    public List<RolUsuario> listarRolesUsuario() {
         return repos.findAll();
     }
 
