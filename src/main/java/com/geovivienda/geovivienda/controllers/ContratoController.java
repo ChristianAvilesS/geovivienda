@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/contratos")
 public class ContratoController {
-    private static final Logger logger = LoggerFactory.getLogger(DireccionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ContratoController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
@@ -49,6 +49,7 @@ public class ContratoController {
         throw new RecursoNoEncontradoException("No se encontro el contrato con el id: "+id);
     }
 
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String,Boolean>> eliminarContrato(@PathVariable int id) {
         var contrato = servicio.buscarContratoPorId(id);
         servicio.eliminarContrato(contrato);

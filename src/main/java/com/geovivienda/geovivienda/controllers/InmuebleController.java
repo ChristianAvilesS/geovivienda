@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/inmuebles")
 public class InmuebleController {
-    private static final Logger logger = LoggerFactory.getLogger(DireccionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(InmuebleController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
@@ -49,7 +49,7 @@ public class InmuebleController {
         throw new RecursoNoEncontradoException("No se encontro el inmueble con el id "+id);
     }
 
-    @DeleteMapping("/{id")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String,Boolean>> eliminarInmueble(@PathVariable int id){
         var inmueble = servicio.buscarInmueblePorId(id);
         servicio.eliminarInmueble(inmueble);

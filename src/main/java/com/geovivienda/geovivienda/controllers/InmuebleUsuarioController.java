@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/inmuebleusuario")
 public class InmuebleUsuarioController {
-    private static final Logger logger = LoggerFactory.getLogger(RolUsuarioController.class);
+    private static final Logger logger = LoggerFactory.getLogger(InmuebleUsuarioController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired

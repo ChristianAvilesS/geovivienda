@@ -2,11 +2,13 @@ package com.geovivienda.geovivienda.entities;
 
 import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "inmuebles_x_usuario")
 public class InmuebleUsuario {
