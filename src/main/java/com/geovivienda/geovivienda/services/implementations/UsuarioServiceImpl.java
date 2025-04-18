@@ -15,7 +15,7 @@ public class UsuarioServiceImpl implements IUsuarioService {
     private IUsuarioRepository repos;
 
     @Override
-    public List<Usuario> listarUsuarioes() {
+    public List<Usuario> listarUsuarios() {
         return repos.findAll();
     }
 
@@ -34,5 +34,10 @@ public class UsuarioServiceImpl implements IUsuarioService {
         //No se usa esto porque "eliminar" está como atributo en inactivo: repos.delete(usuario);
         usuario.setInactivo(true);
         return guardarUsuario(usuario);
+    }
+
+    @Override
+    public Usuario verificarLogin(Usuario usuario) {
+        return repos.buscarUsuarioPorUsernameYPassword(usuario.getUsername(), usuario.getPassword());
     }
 }

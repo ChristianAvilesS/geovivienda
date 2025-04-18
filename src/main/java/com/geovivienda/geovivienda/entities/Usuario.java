@@ -1,11 +1,15 @@
 package com.geovivienda.geovivienda.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "usuarios")
 public class Usuario {
@@ -24,7 +28,7 @@ public class Usuario {
     @JoinColumn(name = "id_direccion", nullable = false)
     private Direccion idDireccion;
 
-    @Column(name = "username", nullable = false, length = 20)
+    @Column(name = "username", nullable = false, length = 20, unique = true)
     private String username;
 
     @Column(name = "email", length = 20)

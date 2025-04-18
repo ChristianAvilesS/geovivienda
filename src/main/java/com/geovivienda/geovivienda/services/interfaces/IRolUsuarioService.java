@@ -13,4 +13,5 @@ public interface IRolUsuarioService {
     // Cumple la función de insertar y actualizar
     public RolUsuario guardarRolUsuario(RolUsuario rolUsuario);
     public void eliminarRolUsuario(RolUsuario rolUsuario);
+    List<RolUsuario> buscarRolesPorUsuario(int idUsuario);
 }

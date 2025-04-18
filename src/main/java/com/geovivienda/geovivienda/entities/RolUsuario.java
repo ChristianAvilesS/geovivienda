@@ -2,11 +2,15 @@ package com.geovivienda.geovivienda.entities;
 
 import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "roles_x_usuario")
 public class RolUsuario {

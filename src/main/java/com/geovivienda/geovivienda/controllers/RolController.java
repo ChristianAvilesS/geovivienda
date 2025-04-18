@@ -25,14 +25,14 @@ public class RolController {
     @Autowired
     private IRolService servicio;
 
-    @GetMapping("/")
+    @GetMapping
     public List<RolDTO> obtenerRoles() {
         var roles = servicio.listarRoles();
         roles.forEach((rol) -> logger.info(rol.toString()));
         return roles.stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public RolDTO agregarRol(@RequestBody Rol rol) {
         logger.info("Rol a agregar: " + rol);
         var rolGuardado = this.servicio.guardarRol(rol);
@@ -49,10 +49,9 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RolDTO> actualizarRol(@PathVariable int id, @RequestBody Rol rolRecibido) {
+    public ResponseEntity<RolDTO> actualizarRol(@PathVariable int id, @RequestBody RolDTO dto) {
         Rol rol = this.servicio.buscarRolPorId(id);
-        rol.setRol(rolRecibido.getRol());
-
+        rol.setRol(dto.getRol());
         this.servicio.guardarRol(rol);
         return ResponseEntity.ok(modelM.map(rol, RolDTO.class));
     }
@@ -64,6 +63,11 @@ public class RolController {
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/")
+    public RolDTO buscarRolPorNombre(@RequestParam String nombre) {
+        return modelM.map(this.servicio.buscarRolPorNombre(nombre), RolDTO.class);
     }
 
 

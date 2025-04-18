@@ -3,11 +3,13 @@ package com.geovivienda.geovivienda.dtos;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 public class DireccionDTO {
     private Integer idDireccion;
     private String direccion;
-    private double latitud;
-    private double longitud;
+    private BigDecimal latitud;
+    private BigDecimal longitud;
 }

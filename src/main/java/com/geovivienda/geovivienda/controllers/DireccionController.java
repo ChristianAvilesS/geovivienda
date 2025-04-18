@@ -5,12 +5,11 @@ import com.geovivienda.geovivienda.entities.Direccion;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IDireccionService;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,24 +18,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/direcciones")
 public class DireccionController {
-    private static final Logger logger = LoggerFactory.getLogger(DireccionController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
     private IDireccionService servicio;
 
-    @GetMapping("/")
+    @GetMapping
     public List<DireccionDTO> obtenerDireccions() {
-        var direcciones = servicio.listarDirecciones();
-        direcciones.forEach((direccion) -> logger.info(direccion.toString()));
-        return direcciones.stream().map(p -> modelM.map(p, DireccionDTO.class)).collect(Collectors.toList());
+        return servicio.listarDirecciones().stream().map(p -> modelM.map(p, DireccionDTO.class))
+                .collect(Collectors.toList());
     }
 
-    @PostMapping("/")
+    @PostMapping
     public DireccionDTO agregarDireccion(@RequestBody Direccion direccion) {
-        logger.info("Direccion a agregar: " + direccion);
-        var direccionGuardada = this.servicio.guardarDireccion(direccion);
-        return modelM.map(direccionGuardada, DireccionDTO.class);
+        return modelM.map(this.servicio.guardarDireccion(direccion), DireccionDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -57,5 +52,10 @@ public class DireccionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/buscar")
+    public List<DireccionDTO> obtenerDireccionesEnRango(@RequestBody DireccionDTO dto, @RequestParam("rango") BigDecimal rango) {
+        return servicio.buscarDireccionesEnRango(modelM.map(dto, Direccion.class), rango).stream()
+                .map(p -> modelM.map(p, DireccionDTO.class)).collect(Collectors.toList());
+    }
 
 }
