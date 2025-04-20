@@ -2,11 +2,13 @@ package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.UsuarioLoginDTO;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.exceptions.UsuarioInactivoException;
 import org.modelmapper.ModelMapper;
 import com.geovivienda.geovivienda.dtos.UsuarioDTO;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,11 +44,11 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable int id, @RequestBody Usuario usuarioRecibido) {
+    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable int id, @RequestBody UsuarioDTO usuarioRecibido) {
         Usuario usuario = this.servicio.buscarUsuarioPorId(id);
         usuario.setNombre(usuarioRecibido.getNombre());
         usuario.setTelefono(usuarioRecibido.getTelefono());
-        usuario.setIdDireccion(usuarioRecibido.getIdDireccion());
+        usuario.setDireccion(usuarioRecibido.getDireccion());
         usuario.setEmail(usuarioRecibido.getEmail());
 
         this.servicio.guardarUsuario(usuario);
@@ -67,7 +69,11 @@ public class UsuarioController {
     public ResponseEntity<UsuarioDTO> verificarUsuario(@RequestBody UsuarioLoginDTO dto) {
         Usuario usuario = servicio.verificarLogin(modelM.map(dto, Usuario.class));
         if (usuario != null) {
+            if (usuario.getInactivo()) {
+                throw new UsuarioInactivoException("El usuario ha sido eliminado");
+            }
             return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
+
         }
         throw new RecursoNoEncontradoException("El usuario o contraseña es incorrecto");
     }

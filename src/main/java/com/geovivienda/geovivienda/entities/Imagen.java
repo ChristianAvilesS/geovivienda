@@ -13,11 +13,11 @@ public class Imagen {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_imagen", nullable = false)
-    private Integer id;
+    private Integer idImagen;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_inmueble", nullable = false)
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
     @Column(name = "url", length = 200)
     private String url;

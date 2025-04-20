@@ -16,7 +16,7 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario", nullable = false)
-    private Integer id;
+    private Integer idUsuario;
 
     @Column(name = "nombre", length = 200)
     private String nombre;
@@ -24,9 +24,9 @@ public class Usuario {
     @Column(name = "telefono", length = 20)
     private String telefono;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_direccion", nullable = false)
-    private Direccion idDireccion;
+    private Direccion direccion;
 
     @Column(name = "username", nullable = false, length = 20, unique = true)
     private String username;

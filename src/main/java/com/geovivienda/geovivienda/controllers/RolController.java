@@ -5,8 +5,6 @@ import com.geovivienda.geovivienda.entities.Rol;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IRolService;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/roles")
 public class RolController {
-    private static final Logger logger = LoggerFactory.getLogger(RolController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
@@ -27,16 +24,12 @@ public class RolController {
 
     @GetMapping
     public List<RolDTO> obtenerRoles() {
-        var roles = servicio.listarRoles();
-        roles.forEach((rol) -> logger.info(rol.toString()));
-        return roles.stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
+        return servicio.listarRoles().stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
-    public RolDTO agregarRol(@RequestBody Rol rol) {
-        logger.info("Rol a agregar: " + rol);
-        var rolGuardado = this.servicio.guardarRol(rol);
-        return modelM.map(rolGuardado, RolDTO.class);
+    public RolDTO agregarRol(@RequestBody RolDTO dto) {
+        return modelM.map(this.servicio.guardarRol(modelM.map(dto, Rol.class)), RolDTO.class);
     }
 
     @GetMapping("/{id}")

@@ -30,8 +30,8 @@ public class DireccionController {
     }
 
     @PostMapping
-    public DireccionDTO agregarDireccion(@RequestBody Direccion direccion) {
-        return modelM.map(this.servicio.guardarDireccion(direccion), DireccionDTO.class);
+    public DireccionDTO agregarDireccion(@RequestBody DireccionDTO dto) {
+        return modelM.map(this.servicio.guardarDireccion(modelM.map(dto, Direccion.class)), DireccionDTO.class);
     }
 
     @GetMapping("/{id}")

@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("geovivienda/rolesUsuario")
+@RequestMapping("geovivienda/rolesusuario")
 public class RolUsuarioController {
     private final ModelMapper modelM = new ModelMapper();
 
@@ -30,8 +30,8 @@ public class RolUsuarioController {
     }
 
     @PostMapping
-    public RolUsuarioDTO agregarRolUsuario(@RequestBody RolUsuario rolUsuario) {
-        return modelM.map(this.servicio.guardarRolUsuario(rolUsuario), RolUsuarioDTO.class);
+    public RolUsuarioDTO agregarRolUsuario(@RequestBody RolUsuarioDTO dto) {
+        return modelM.map(this.servicio.guardarRolUsuario(modelM.map(dto, RolUsuario.class)), RolUsuarioDTO.class);
     }
 
     @GetMapping("/buscar")

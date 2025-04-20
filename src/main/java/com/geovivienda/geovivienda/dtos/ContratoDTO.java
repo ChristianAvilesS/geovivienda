@@ -7,6 +7,7 @@ import lombok.Setter;
 
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Getter
@@ -14,19 +15,19 @@ import java.time.LocalDateTime;
 public class ContratoDTO {
     private Integer id;
 
-    private Usuario idVendedor;
+    private Usuario vendedor;
 
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
-    private Usuario idComprador;
+    private Usuario comprador;
 
     private String tipoContrato;
 
     private String descripcion;
 
-    private BigDecimal montototal;
+    private BigDecimal montoTotal;
 
-    private LocalDateTime fechaFirma;
+    private Instant fechaFirma;
 
-    private LocalDateTime fechaVencimiento;
+    private Instant fechaVencimiento;
 }

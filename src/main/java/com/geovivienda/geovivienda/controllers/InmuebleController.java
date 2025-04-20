@@ -20,24 +20,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/inmuebles")
 public class InmuebleController {
-    private static final Logger logger = LoggerFactory.getLogger(InmuebleController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
     private IInmuebleService servicio;
 
-    @GetMapping("/")
+    @GetMapping
     public List<InmuebleDTO> obtenerInmuebles(){
-        var inmuebles = servicio.listarInmuebles();
-        inmuebles.forEach((inmueble) -> logger.info(inmueble.toString()));
-        return inmuebles.stream().map(p -> modelM.map(p,InmuebleDTO.class)).collect(Collectors.toList());
+        return servicio.listarInmuebles().stream()
+                .map(p -> modelM.map(p,InmuebleDTO.class)).collect(Collectors.toList());
     }
 
-    @PostMapping("/")
-    public InmuebleDTO agregarInmueble(@RequestBody Inmueble inmueble) {
-        logger.info("Inmueble a ingresar: "+ inmueble);
-        var inmuebleGuardado = this.servicio.guardarInmueble(inmueble);
-        return modelM.map(inmuebleGuardado, InmuebleDTO.class);
+    @PostMapping
+    public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
+        return modelM.map(servicio.guardarInmueble(modelM.map(dto, Inmueble.class)), InmuebleDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -54,7 +50,7 @@ public class InmuebleController {
         var inmueble = servicio.buscarInmueblePorId(id);
         servicio.eliminarInmueble(inmueble);
         Map<String, Boolean>respuesta = new HashMap<>();
-        respuesta.put("eliminado",true);
+        respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
     }
 

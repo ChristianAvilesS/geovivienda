@@ -15,7 +15,7 @@ import lombok.*;
 public class MedioPago {
     @Id
     @Column(name = "id_medio", nullable = false)
-    private Integer id;
+    private Integer idMedio;
 
     @Column(name = "medio_pago", length = 20)
     private String medioPago;

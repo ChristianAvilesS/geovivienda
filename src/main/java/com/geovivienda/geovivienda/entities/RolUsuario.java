@@ -18,13 +18,13 @@ public class RolUsuario {
     private RolUsuarioId id;
 
     @MapsId("idUsuario")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @MapsId("idRol")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_rol", nullable = false)
-    private Rol idRol;
+    private Rol rol;
 
 }

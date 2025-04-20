@@ -15,7 +15,7 @@ public class Inmueble {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_inmueble", nullable = false)
-    private Integer id;
+    private Integer idInmueble;
 
     @Column(name = "nombre", length = 100)
     private String nombre;
@@ -25,7 +25,7 @@ public class Inmueble {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_direccion", nullable = false)
-    private Direccion idDireccion;
+    private Direccion direccion;
 
     @Column(name = "area", precision = 10, scale = 2)
     private BigDecimal area;

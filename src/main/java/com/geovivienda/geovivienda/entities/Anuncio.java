@@ -15,11 +15,11 @@ public class Anuncio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_anuncio", nullable = false)
-    private Integer id;
+    private Integer idAnuncio;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_anunciante", nullable = false)
-    private Usuario idAnunciante;
+    private Usuario anunciante;
 
     @Column(name = "descripcion", length = 200)
     private String descripcion;
@@ -27,8 +27,8 @@ public class Anuncio {
     @Column(name = "fecha_publicacion")
     private LocalDateTime fechaPublicacion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_inmueble", nullable = false)
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
 }

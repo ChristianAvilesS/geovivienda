@@ -15,14 +15,14 @@ public class InmuebleUsuario {
     private InmuebleUsuarioId id;
 
     @MapsId("idUsuario")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     @MapsId("idInmueble")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_inmueble", nullable = false)
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
     @Column(name = "es_duenio")
     private Boolean esDuenio;

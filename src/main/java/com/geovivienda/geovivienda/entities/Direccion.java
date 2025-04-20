@@ -15,7 +15,7 @@ public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_direccion", nullable = false)
-    private Integer id;
+    private Integer idDireccion;
 
     @Column(name = "direccion", length = 100)
     private String direccion;
