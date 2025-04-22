@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("geovivienda/anuncio")
+@RequestMapping("geovivienda/anuncios")
 public class AnuncioController {
     private final ModelMapper modelM = new ModelMapper();
 
