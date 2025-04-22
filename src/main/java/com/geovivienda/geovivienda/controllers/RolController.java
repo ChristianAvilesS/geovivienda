@@ -42,7 +42,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RolDTO> actualizarRol(@PathVariable int id, @RequestBody RolDTO dto) {
+    public ResponseEntity<RolDTO> actualizarRol(@PathVariable int id, @RequestBody RolDTO dto) { // Se eliminará
         Rol rol = this.servicio.buscarRolPorId(id);
         rol.setRol(dto.getRol());
         this.servicio.guardarRol(rol);
@@ -50,7 +50,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, Boolean>> eliminarRol(@PathVariable int id) {
+    public ResponseEntity<Map<String, Boolean>> eliminarRol(@PathVariable int id) { // Se eliminará
         var rol = servicio.buscarRolPorId(id);
         servicio.eliminarRol(rol);
         Map<String, Boolean> respuesta = new HashMap<>();
