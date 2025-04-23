@@ -5,8 +5,9 @@ import com.geovivienda.geovivienda.entities.MedioPago;
 import java.util.List;
 
 public interface IMedioPagoService {
-    public List<MedioPago> listarMedioPago();
-    public MedioPago guardarMedioPago(MedioPago medioPago);
-    public void actualizarMedioPago(MedioPago medioPago);
-    public void eliminarMedioPago(int id);
+    List<MedioPago> listarMedioPago();
+    // Cumple función de insert y update
+    MedioPago guardarMedioPago(MedioPago medioPago);
+    MedioPago buscarMedioPagoPorId(int id);
+    void eliminarMedioPago(int id);
 }

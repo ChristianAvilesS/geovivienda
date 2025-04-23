@@ -14,8 +14,12 @@ public class PagoServiceImpl implements IPagoService {
     private IPagoRepository repos;
 
     @Override
-    public List<Pago> list() {return repos.findAll();}
+    public List<Pago> listarPagos() {
+        return repos.findAll();
+    }
 
     @Override
-    public void insert(Pago pago){ repos.save(pago);}
+    public Pago guardarPago(Pago pago){
+        return repos.save(pago);
+    }
 }

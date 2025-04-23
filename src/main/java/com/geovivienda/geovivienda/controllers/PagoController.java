@@ -13,21 +13,18 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/pagos")
 public class PagoController {
+    private final ModelMapper modelM = new ModelMapper();
     @Autowired
-    private IPagoService pS;
+    private IPagoService servicio;
 
-    @GetMapping("/lista")
-    public List<PagoDTO> listar() {
-        return pS.list().stream().map(p -> {
-            ModelMapper modelMapper = new ModelMapper();
-            return modelMapper.map(p, PagoDTO.class);
-        }).collect(Collectors.toList());
+    @GetMapping
+    public List<PagoDTO> obtenerPagos() { // Listar
+        return servicio.listarPagos().stream().map(p -> modelM.map(p, PagoDTO.class)).collect(Collectors.toList());
     }
 
-    @PostMapping("/prueba")
-    public void insertar(@RequestBody PagoDTO dto) {
-        ModelMapper modelMapper = new ModelMapper();
-        Pago p = modelMapper.map(dto, Pago.class);
-        pS.insert(p);
+    @PostMapping
+    public PagoDTO agregarPago(@RequestBody PagoDTO dto) { // Insertar
+        Pago p = modelM.map(dto, Pago.class);
+        return modelM.map(servicio.guardarPago(p), PagoDTO.class); // Regresa el pago con el id generado
     }
 }

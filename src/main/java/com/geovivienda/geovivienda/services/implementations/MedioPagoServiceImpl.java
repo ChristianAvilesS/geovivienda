@@ -25,12 +25,13 @@ public class MedioPagoServiceImpl implements IMedioPagoService {
     }
 
     @Override
+    public MedioPago buscarMedioPagoPorId(int id) {
+        return repos.findById(id).orElse(null);
+    }
+
+    @Override
     public void eliminarMedioPago(int id) {
         repos.deleteById(id);
     }
 
-    @Override
-    public void actualizarMedioPago(MedioPago medioPago) {
-        repos.save(medioPago);
-    }
 }
