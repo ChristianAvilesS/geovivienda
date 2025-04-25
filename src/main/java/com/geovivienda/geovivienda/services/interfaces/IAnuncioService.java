@@ -10,4 +10,6 @@ public interface IAnuncioService {
 
     public Anuncio guardarAnuncio (Anuncio anuncio);
     public void eliminarAnuncio (Anuncio anuncio);
+
+    public List<String[]> cantidadAnunciosXUsuario();
 }
