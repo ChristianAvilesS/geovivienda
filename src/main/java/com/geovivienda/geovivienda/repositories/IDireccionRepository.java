@@ -9,7 +9,6 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 import java.util.List;
 
-@Repository
 public interface IDireccionRepository extends JpaRepository<Direccion, Integer> {
     @Query("SELECT dir FROM Direccion dir WHERE dir.latitud" +
             " BETWEEN :lat - :rango AND :lat + :rango " +

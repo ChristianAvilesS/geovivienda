@@ -10,7 +10,6 @@ import java.util.List;
 
 @Service
 public class ContratoServiceImpl implements IContratoService {
-
     @Autowired
     private IContratoRepository repos;
 

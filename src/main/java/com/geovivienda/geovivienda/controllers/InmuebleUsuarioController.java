@@ -6,6 +6,8 @@ import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleUsuarioService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,13 +18,16 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("geovivienda/inmuebleusuario")
+public class InmuebleUsuarioController {
+    private static final Logger logger = LoggerFactory.getLogger(RolUsuarioController.class);
 @RequestMapping("geovivienda/inmueblesusuario")
 public class InmuebleUsuarioController {
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
     private IInmuebleUsuarioService servicio;
-
+  
     @GetMapping
     public List<InmuebleUsuarioDTO> obtenerInmuebleUsuarios() {
         return servicio.listarInmuebleUsuarios().stream()
@@ -43,7 +48,7 @@ public class InmuebleUsuarioController {
         }
         throw new RecursoNoEncontradoException("No se encontró el id: " + id);
     }
-
+  
     @DeleteMapping
     public ResponseEntity<Map<String,Boolean>> eliminarInmuebleUsuario(@RequestBody InmuebleUsuarioId id) {
         var inmuebleUsuario = servicio.buscarInmuebleUsuarioPorId(id);

@@ -5,16 +5,14 @@ import com.geovivienda.geovivienda.entities.Usuario;
 import lombok.Getter;
 import lombok.Setter;
 
-
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
 public class ContratoDTO {
     private Integer id;
-
+  
     private Usuario vendedor;
 
     private Inmueble inmueble;
