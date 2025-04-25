@@ -8,7 +8,6 @@ import com.geovivienda.geovivienda.dtos.UsuarioDTO;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

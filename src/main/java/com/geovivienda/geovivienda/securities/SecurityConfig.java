@@ -1,4 +1,4 @@
-package com.geovivienda.geovivienda.security;
+package com.geovivienda.geovivienda.securities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

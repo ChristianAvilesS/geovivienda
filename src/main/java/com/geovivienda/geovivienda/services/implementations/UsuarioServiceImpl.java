@@ -38,6 +38,6 @@ public class UsuarioServiceImpl implements IUsuarioService {
 
     @Override
     public Usuario verificarLogin(Usuario usuario) {
-        return repos.buscarUsuarioPorUsernameYPassword(usuario.getUsername(), usuario.getPassword());
+        return repos.findUsuarioByUsernameAndPassword(usuario.getUsername(), usuario.getPassword());
     }
 }

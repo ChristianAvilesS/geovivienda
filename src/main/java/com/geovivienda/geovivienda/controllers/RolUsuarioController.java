@@ -1,5 +1,6 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.RolPredominanteDTO;
 import com.geovivienda.geovivienda.dtos.RolUsuarioDTO;
 import com.geovivienda.geovivienda.entities.RolUsuario;
 import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
@@ -53,9 +54,19 @@ public class RolUsuarioController {
     }
 
     @GetMapping("/buscar/{id}")
-    public List<RolUsuarioDTO> obtenerRolUsuarioPorId(@PathVariable int id) {
+    public List<RolUsuarioDTO> obtenerRolesUsuarioPorId(@PathVariable int id) {
         return servicio.buscarRolesPorUsuario(id).stream().map(ru -> modelM.map(ru, RolUsuarioDTO.class)
         ).collect(Collectors.toList());
+    }
+
+    @GetMapping("/rol_predom/{id}")
+    public RolPredominanteDTO obtenerRolPredominantePorUsuario(@PathVariable int id) {
+        return servicio.findPredominantUserRol(id).stream().map(r -> {
+            RolPredominanteDTO dto = new RolPredominanteDTO();
+            dto.setIdUsuario(id);
+            dto.setRol(r[1]);
+            return dto;
+        }).toList().get(0);
     }
 
 }
