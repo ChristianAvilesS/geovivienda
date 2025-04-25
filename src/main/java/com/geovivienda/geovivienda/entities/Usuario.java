@@ -22,7 +22,7 @@ public class Usuario {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_direccion", nullable = false)
-    private Direccion idDireccion;
+    private Direccion direccion;
 
     @Column(name = "username", nullable = false, length = 20)
     private String username;

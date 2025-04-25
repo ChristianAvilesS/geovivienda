@@ -24,7 +24,7 @@ public class Inmueble {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_direccion", nullable = false)
-    private Direccion idDireccion;
+    private Direccion direccion;
 
     @Column(name = "area", precision = 10, scale = 2)
     private BigDecimal area;

@@ -33,4 +33,9 @@ public class InmuebleServiceImpl implements IInmuebleService {
     public void eliminarInmueble(Inmueble inmueble) {
         repos.delete(inmueble);
     }
+
+    @Override
+    public List<Inmueble> buscarInmueblesCercanosUsuario(double minLong, double maxLong, double minLat, double maxLat) {
+        return repos.buscarInmueblesCercanosUsuario(minLong,maxLong,minLat,maxLat);
+    }
 }

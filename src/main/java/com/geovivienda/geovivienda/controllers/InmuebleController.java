@@ -58,5 +58,12 @@ public class InmuebleController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/listainmueblescercanosalusuario")
+    public List<InmuebleDTO> listarInmueblesCercanosAlUsuario(@RequestParam double minLong,@RequestParam double maxLong,@RequestParam double minLat,@RequestParam double maxLat){
+        var inmuebles = servicio.buscarInmueblesCercanosUsuario(minLong,maxLong,minLat,maxLat);
+        inmuebles.forEach((inmueble) -> logger.info(inmueble.toString()));
+        return inmuebles.stream().map(p -> modelM.map(p,InmuebleDTO.class)).collect(Collectors.toList());
+    }
+
 }
 
