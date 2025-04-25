@@ -2,6 +2,7 @@ package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.ComentarioDTO;
 import com.geovivienda.geovivienda.entities.Comentario;
+import com.geovivienda.geovivienda.entities.Inmueble;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IComentarioService;
 import org.modelmapper.ModelMapper;
@@ -25,18 +26,27 @@ public class ComentarioController {
         return servicio.listarComentario().stream()
                 .map(p -> modelM.map(p, ComentarioDTO.class)).collect(Collectors.toList());
     }
+
     @PostMapping
     public ComentarioDTO agregarComentario(@RequestBody ComentarioDTO dto) {
-        return modelM.map(this.servicio.guardarComentario(modelM.map(dto, Comentario.class)),ComentarioDTO.class);
+        return modelM.map(this.servicio.guardarComentario(modelM.map(dto, Comentario.class)), ComentarioDTO.class);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ComentarioDTO> obtenerComentarioPorId(@PathVariable int id) {
         Comentario comentario = servicio.buscarcomentarioPorId(id);
 
-        if(comentario != null) {
+        if (comentario != null) {
             return ResponseEntity.ok(modelM.map(comentario, ComentarioDTO.class));
         }
         throw new RecursoNoEncontradoException("No se encontro el id: " + id);
+    }
+
+    @GetMapping("/buscarporinmueble/{id}")
+    public List<ComentarioDTO> findByInmueble(@PathVariable Integer id) {
+
+        Inmueble inmueble = servicio.findById(id).getInmueble();
+        return servicio.findByInmueble(inmueble).stream()
+                .map(p -> modelM.map(p, ComentarioDTO.class)).collect(Collectors.toList());
     }
 }

@@ -5,12 +5,14 @@ import com.geovivienda.geovivienda.entities.Usuario;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
-public class ComentarioDTO {
-    private Integer id;
+public class AnuncioDTO {
+    private Integer idAnuncio;
+    private Usuario anunciante;
     private String descripcion;
-    private Usuario usuario;
+    private LocalDateTime fechaPublicacion;
     private Inmueble inmueble;
-
 }
