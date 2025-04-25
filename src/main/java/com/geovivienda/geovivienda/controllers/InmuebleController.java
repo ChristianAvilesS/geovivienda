@@ -4,15 +4,16 @@ import com.geovivienda.geovivienda.dtos.DireccionDTO;
 import com.geovivienda.geovivienda.dtos.InmuebleDTO;
 import com.geovivienda.geovivienda.dtos.InmuebleDireccionDTO;
 import com.geovivienda.geovivienda.entities.Inmueble;
+import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.externalapis.GeoapifyConnection;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +58,15 @@ public class InmuebleController {
     }
 
     @GetMapping("/inmuebles_en_direccion")
-    public List<InmuebleDireccionDTO> obtenerInmueblesCercaADireccion(@RequestParam("lon") BigDecimal lon,
-                                                                          @RequestParam("lat") BigDecimal lat,
+    public List<InmuebleDireccionDTO> obtenerInmueblesCercaADireccion(@RequestParam("dir") String dir,
                                                                           @RequestParam("rango") BigDecimal rango) {
-        return servicio.buscarInmueblesEnLugarEnRango(lon, lat, rango).stream()
+        DireccionDTO direccion;
+        try {
+            direccion = new GeoapifyConnection(dir).getDireccionDTOAsociada();
+        } catch (IOException e) {
+            throw new LocationNotFoundException("No se encontró el lugar deseado");
+        }
+        return servicio.buscarInmueblesEnLugarEnRango(direccion.getLongitud(), direccion.getLatitud(), rango).stream()
                 .map(i -> {
                     var dto = new InmuebleDireccionDTO();
                     dto.setNombre(i.getNombre());
