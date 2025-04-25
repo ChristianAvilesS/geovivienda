@@ -3,13 +3,14 @@ package com.geovivienda.geovivienda.services.implementations;
 import com.geovivienda.geovivienda.entities.Contrato;
 import com.geovivienda.geovivienda.repositories.IContratoRepository;
 import com.geovivienda.geovivienda.services.interfaces.IContratoService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class ContratoServiceImpl implements IContratoService {
-
+    @Autowired
     private IContratoRepository repos;
 
     @Override

@@ -11,7 +11,7 @@ import lombok.Setter;
 public class InmuebleUsuarioDTO {
     private InmuebleUsuarioId id;
 
-    private Usuario idUsuario;
+    private Usuario usuario;
 
     private Inmueble idInmueble;
 

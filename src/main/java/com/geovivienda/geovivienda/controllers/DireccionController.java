@@ -2,15 +2,17 @@ package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
 import com.geovivienda.geovivienda.entities.Direccion;
+import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.externalapis.GeoapifyConnection;
 import com.geovivienda.geovivienda.services.interfaces.IDireccionService;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,24 +21,43 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("geovivienda/direcciones")
 public class DireccionController {
-    private static final Logger logger = LoggerFactory.getLogger(DireccionController.class);
     private final ModelMapper modelM = new ModelMapper();
 
     @Autowired
     private IDireccionService servicio;
 
-    @GetMapping("/")
-    public List<DireccionDTO> obtenerDireccions() {
-        var direcciones = servicio.listarDirecciones();
-        direcciones.forEach((direccion) -> logger.info(direccion.toString()));
-        return direcciones.stream().map(p -> modelM.map(p, DireccionDTO.class)).collect(Collectors.toList());
+    @GetMapping
+    public List<DireccionDTO> obtenerDirecciones() {
+        return servicio.listarDirecciones().stream().map(p -> modelM.map(p, DireccionDTO.class))
+                .collect(Collectors.toList());
     }
 
-    @PostMapping("/")
-    public DireccionDTO agregarDireccion(@RequestBody Direccion direccion) {
-        logger.info("Direccion a agregar: " + direccion);
-        var direccionGuardada = this.servicio.guardarDireccion(direccion);
-        return modelM.map(direccionGuardada, DireccionDTO.class);
+    @PostMapping
+    public DireccionDTO agregarDireccion(@RequestParam String d) {
+        DireccionDTO dto = null;
+        try {
+            dto = new GeoapifyConnection(d).getDireccionDTOAsociada();
+        } catch (IOException e) {
+            throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
+        }
+
+        return modelM.map(this.servicio.guardarDireccion(modelM.map(dto, Direccion.class)), DireccionDTO.class);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<DireccionDTO> modificarDireccion(@PathVariable int id, @RequestParam String d) {
+        DireccionDTO dto = null;
+        Direccion direccion = servicio.buscarDireccionPorId(id);
+        try {
+            dto = new GeoapifyConnection(d).getDireccionDTOAsociada();
+            direccion.setDireccion(dto.getDireccion());
+            direccion.setLatitud(dto.getLatitud());
+            direccion.setLongitud(dto.getLongitud());
+        } catch (IOException e) {
+            throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
+        }
+
+        return ResponseEntity.ok(modelM.map(servicio.guardarDireccion(direccion), DireccionDTO.class));
     }
 
     @GetMapping("/{id}")
@@ -57,5 +78,10 @@ public class DireccionController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/buscar")
+    public List<DireccionDTO> obtenerDireccionesEnRango(@RequestBody DireccionDTO dto, @RequestParam("rango") BigDecimal rango) {
+        return servicio.buscarDireccionesEnRango(modelM.map(dto, Direccion.class), rango).stream()
+                .map(p -> modelM.map(p, DireccionDTO.class)).collect(Collectors.toList());
+    }
 
 }

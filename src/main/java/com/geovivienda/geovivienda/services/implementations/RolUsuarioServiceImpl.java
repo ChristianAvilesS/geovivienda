@@ -34,4 +34,14 @@ public class RolUsuarioServiceImpl implements IRolUsuarioService {
     public void eliminarRolUsuario(RolUsuario rolUsuario) {
         repos.delete(rolUsuario);
     }
+
+    @Override
+    public List<RolUsuario> buscarRolesPorUsuario(int idUsuario) {
+        return repos.buscarRolesPorUsuario(idUsuario);
+    }
+
+    @Override
+    public List<String[]> findPredominantUserRol(int idUsuario) {
+        return repos.findPredominantUserRol(idUsuario);
+    }
 }

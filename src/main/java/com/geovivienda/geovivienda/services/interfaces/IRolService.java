@@ -6,11 +6,12 @@ import java.util.List;
 
 public interface IRolService {
 
-    public List<Rol> listarRoles();
-    public Rol buscarRolPorId(Integer id);
+    List<Rol> listarRoles();
+    Rol buscarRolPorId(Integer id);
 
     // Cumple la función de insertar y actualizar
-    public Rol guardarRol(Rol rol);
-    public void eliminarRol(Rol rol);
+    Rol guardarRol(Rol rol);
+    void eliminarRol(Rol rol);
+    Rol buscarRolPorNombre(String nombre);
 
 }

@@ -1,20 +1,21 @@
 package com.geovivienda.geovivienda.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "inmuebles")
 public class Inmueble {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_inmueble", nullable = false)
-    private Integer id;
+    private Integer idInmueble;
 
     @Column(name = "nombre", length = 100)
     private String nombre;

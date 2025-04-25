@@ -1,20 +1,21 @@
 package com.geovivienda.geovivienda.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "pagos")
 public class Pago {
     @Id
     @Column(name = "id_pago", nullable = false)
-    private Integer id;
+    private Integer idPago;
 
     @Column(name = "descripcion", length = 200)
     private String descripcion;
@@ -27,7 +28,7 @@ public class Pago {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_medio", nullable = false)
-    private MedioPago idMedio;
+    private MedioPago medio;
 
     @Column(name = "fecha_pago")
     private Instant fechaPago;
@@ -35,8 +36,8 @@ public class Pago {
     @Column(name = "fecha_vencimiento")
     private Instant fechaVencimiento;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_contrato", nullable = false)
-    private Contrato idContrato;
+    private Contrato contrato;
 
 }

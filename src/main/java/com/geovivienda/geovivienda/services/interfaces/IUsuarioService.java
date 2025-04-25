@@ -6,10 +6,11 @@ import java.util.List;
 
 public interface IUsuarioService {
 
-    public List<Usuario> listarUsuarioes();
-    public Usuario buscarUsuarioPorId(Integer id);
+    List<Usuario> listarUsuarios();
+    Usuario buscarUsuarioPorId(Integer id);
 
     // Cumple la función de insertar y actualizar
-    public Usuario guardarUsuario(Usuario usuario);
-    public Usuario eliminarUsuario(Usuario usuario);
+    Usuario guardarUsuario(Usuario usuario);
+    Usuario eliminarUsuario(Usuario usuario);
+    Usuario verificarLogin(Usuario usuario);
 }

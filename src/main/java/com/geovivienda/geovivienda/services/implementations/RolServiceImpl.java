@@ -33,4 +33,11 @@ public class RolServiceImpl implements IRolService {
     public void eliminarRol(Rol rol) {
         repos.delete(rol);
     }
+
+    @Override
+    public Rol buscarRolPorNombre(String nombre) {
+        return repos.buscarRolPorNombre(nombre);
+    }
+
+
 }
