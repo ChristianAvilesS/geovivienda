@@ -11,4 +11,6 @@ public interface IImagenService {
     public Imagen guardarImagen(Imagen imagen);
     public void eliminarImagen(Imagen imagen);
 
+    public List<String[]> cantidadImagenesXInmueble();
+
 }

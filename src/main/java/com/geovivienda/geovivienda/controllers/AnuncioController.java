@@ -2,6 +2,7 @@ package com.geovivienda.geovivienda.controllers;
 
 
 import com.geovivienda.geovivienda.dtos.AnuncioDTO;
+import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
 import com.geovivienda.geovivienda.entities.Anuncio;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IAnuncioService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +52,20 @@ public class AnuncioController {
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/cantidad")
+    public List<CantidadAnunciosXUsuarioDTO> obtenerCantidadAnunciosXUsuario() {
+        List<CantidadAnunciosXUsuarioDTO> dtoLista = new ArrayList<>();
+        List<String[]> filaLista = servicio.cantidadAnunciosXUsuario();
+        for (String[] columna : filaLista) {
+            CantidadAnunciosXUsuarioDTO dto = new CantidadAnunciosXUsuarioDTO();
+            dto.setNombreUsuario(columna[0]);
+            dto.setCantidadAnuncios(Integer.parseInt(columna[2]));
+            dtoLista.add(dto);
+        }
+        return dtoLista;
+
     }
 
 

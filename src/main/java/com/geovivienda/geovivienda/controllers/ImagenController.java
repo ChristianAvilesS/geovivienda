@@ -1,5 +1,7 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
+import com.geovivienda.geovivienda.dtos.CantidadImagenesXInmuebleDTO;
 import com.geovivienda.geovivienda.dtos.ImagenDTO;
 import com.geovivienda.geovivienda.entities.Imagen;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
@@ -9,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,5 +52,19 @@ public class ImagenController {
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/cantidad")
+    public List<CantidadImagenesXInmuebleDTO> obtenerCantidadImagenesXInmueble() {
+        List<CantidadImagenesXInmuebleDTO> dtoLista = new ArrayList<>();
+        List<String[]> filaLista = servicio.cantidadImagenesXInmueble();
+        for (String[] columna : filaLista) {
+            CantidadImagenesXInmuebleDTO dto = new CantidadImagenesXInmuebleDTO();
+            dto.setNombreInmueble(columna[0]);
+            dto.setCantidadImagenes(Integer.parseInt(columna[2]));
+            dtoLista.add(dto);
+        }
+        return dtoLista;
+
     }
 }

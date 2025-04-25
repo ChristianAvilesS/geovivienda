@@ -33,4 +33,9 @@ public class AnuncioServiceImpl implements IAnuncioService {
     public void eliminarAnuncio(Anuncio anuncio) {
         repos.delete(anuncio);
     }
+
+    @Override
+    public List<String[]> cantidadAnunciosXUsuario() {
+        return repos.cantidadAnunciosXUsuario();
+    }
 }
