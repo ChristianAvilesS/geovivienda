@@ -12,4 +12,5 @@ public class ComentarioDTO {
     private String descripcion;
     private Usuario usuario;
     private Inmueble inmueble;
+
 }

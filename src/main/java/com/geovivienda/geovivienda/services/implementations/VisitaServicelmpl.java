@@ -6,6 +6,7 @@ import com.geovivienda.geovivienda.services.interfaces.IVisitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -28,4 +29,11 @@ public class VisitaServicelmpl implements IVisitaService {
     public Visita guardarVisita(Visita visita) {
         return repos.save(visita);
     }
+
+    @Override
+    public List<Visita> buscarVisitaPorInmuebleYFecha(Instant fecha, Integer id) {
+        return repos.buscarVisitaPorInmuebleYFecha(fecha, id);
+    }
+
+
 }
