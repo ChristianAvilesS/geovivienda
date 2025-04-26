@@ -5,6 +5,7 @@ import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -35,9 +36,6 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
-    public List<Inmueble> buscarInmueblesCercanosUsuario(double minLong, double maxLong, double minLat, double maxLat) {
-        return repos.buscarInmueblesCercanosUsuario(minLong,maxLong,minLat,maxLat);
-      
     public List<Inmueble> buscarInmueblesEnLugarEnRango(BigDecimal lon, BigDecimal lat, BigDecimal rango) {
         return repos.buscarInmueblesEnLugarEnRango(lon, lat, rango);
     }
