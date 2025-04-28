@@ -35,9 +35,4 @@ public class UsuarioServiceImpl implements IUsuarioService {
         usuario.setInactivo(true);
         return guardarUsuario(usuario);
     }
-
-    @Override
-    public Usuario verificarLogin(Usuario usuario) {
-        return repos.findUsuarioByUsernameAndPassword(usuario.getUsername(), usuario.getPassword());
-    }
 }
