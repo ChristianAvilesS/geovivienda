@@ -11,6 +11,7 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class AnuncioController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('VENDEDOR')")
     public AnuncioDTO agregarAnuncio(@RequestBody AnuncioDTO dto) {
         var anuncio = modelM.map(dto, Anuncio.class);
         anuncio.setAnunciante(userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario()));
@@ -57,6 +59,7 @@ public class AnuncioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarAnuncio(@PathVariable int id) {
         var anuncio = servicio.buscarAnuncioPorId(id);
         servicio.eliminarAnuncio(anuncio);
@@ -66,6 +69,7 @@ public class AnuncioController {
     }
 
     @GetMapping("/cantidad")
+    @PreAuthorize("hasAnyRole('VENDEDOR', 'ADMIN')")
     public List<CantidadAnunciosXUsuarioDTO> obtenerCantidadAnunciosXUsuario() {
         List<CantidadAnunciosXUsuarioDTO> dtoLista = new ArrayList<>();
         List<String[]> filaLista = servicio.cantidadAnunciosXUsuario();

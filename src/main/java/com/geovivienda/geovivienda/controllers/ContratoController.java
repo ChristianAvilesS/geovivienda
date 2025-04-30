@@ -10,6 +10,7 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,12 +33,14 @@ public class ContratoController {
     private IInmuebleService inmuebleService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ContratoDTO> obtenerContratos() {
         return servicio.listarContratos().stream()
                 .map(contrato -> modelM.map(contrato, ContratoDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('VENDEDOR')")
     public ContratoDTO agregarContrato(@RequestBody ContratoDTO dto){
         var contrato = modelM.map(dto, Contrato.class);
         contrato.setComprador(userService.buscarUsuarioPorId(dto.getComprador().getIdUsuario()));
@@ -56,6 +59,7 @@ public class ContratoController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String,Boolean>> eliminarContrato(@PathVariable int id) {
         var contrato = servicio.buscarContratoPorId(id);
         servicio.eliminarContrato(contrato);

@@ -9,6 +9,7 @@ import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -29,12 +30,14 @@ public class ImagenController {
     private IInmuebleService inService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ImagenDTO> obtenerImagenes() {
         return servicio.listarImagenes().stream()
                 .map(p -> modelM.map(p, ImagenDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('VENDEDOR')")
     public ImagenDTO agregarImagen(@RequestBody ImagenDTO dto) {
         Imagen imagen = modelM.map(dto, Imagen.class);
         imagen.setInmueble(inService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
@@ -52,6 +55,7 @@ public class ImagenController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('VENDEDOR', 'ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarImagen(@PathVariable int id) {
         var imagen = servicio.buscarImagenPorId(id);
         servicio.eliminarImagen(imagen);

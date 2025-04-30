@@ -8,6 +8,7 @@ import com.geovivienda.geovivienda.services.interfaces.IContratoService;
 import com.geovivienda.geovivienda.services.interfaces.IPagoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class PagoController {
     private IContratoService contratoService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<PagoDTO> obtenerPagos() { // Listar
         return servicio.listarPagos().stream().map(p -> modelM.map(p, PagoDTO.class)).collect(Collectors.toList());
     }
@@ -39,6 +41,7 @@ public class PagoController {
     }
 
     @GetMapping("/pagoscercanos")
+    @PreAuthorize("hasAnyRole('COMPRADOR', 'ARRENDATARIO')")
     public List<PagosCercanosDTO> obtenerPagosCercanos() {
         List<PagosCercanosDTO> dtoLista = new ArrayList<>();
             List<Object[]> filaLista=servicio.paymentsByDate();
@@ -57,6 +60,7 @@ public class PagoController {
     }
 
     @GetMapping("/importesXmoneda")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ImportePorMonedaDTO> obtenerImportesXMoneda() {
         List<ImportePorMonedaDTO> dtoLista = new ArrayList<>();
         List<String[]> filaLista=servicio.importByTipeCoin();

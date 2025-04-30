@@ -10,6 +10,7 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class ComentarioController {
     private IInmuebleService inmuebleService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ComentarioDTO> obtenerComentarios() {
         return servicio.listarComentario().stream()
                 .map(p -> modelM.map(p, ComentarioDTO.class)).collect(Collectors.toList());
