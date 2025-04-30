@@ -5,6 +5,8 @@ import com.geovivienda.geovivienda.dtos.ContratoDTO;
 import com.geovivienda.geovivienda.entities.Contrato;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IContratoService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,12 @@ public class ContratoController {
     @Autowired
     private IContratoService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
     public List<ContratoDTO> obtenerContratos() {
         return servicio.listarContratos().stream()
@@ -31,7 +39,11 @@ public class ContratoController {
 
     @PostMapping
     public ContratoDTO agregarContrato(@RequestBody ContratoDTO dto){
-        return modelM.map(servicio.guardarContrato(modelM.map(dto, Contrato.class)), ContratoDTO.class);
+        var contrato = modelM.map(dto, Contrato.class);
+        contrato.setComprador(userService.buscarUsuarioPorId(dto.getComprador().getIdUsuario()));
+        contrato.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        contrato.setVendedor(userService.buscarUsuarioPorId(dto.getVendedor().getIdUsuario()));
+        return modelM.map(servicio.guardarContrato(contrato), ContratoDTO.class);
     }
 
     @GetMapping("/{id}")

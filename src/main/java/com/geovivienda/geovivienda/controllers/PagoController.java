@@ -4,6 +4,7 @@ import com.geovivienda.geovivienda.dtos.ImportePorMonedaDTO;
 import com.geovivienda.geovivienda.dtos.PagoDTO;
 import com.geovivienda.geovivienda.dtos.PagosCercanosDTO;
 import com.geovivienda.geovivienda.entities.Pago;
+import com.geovivienda.geovivienda.services.interfaces.IContratoService;
 import com.geovivienda.geovivienda.services.interfaces.IPagoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class PagoController {
     @Autowired
     private IPagoService servicio;
 
+    @Autowired
+    private IContratoService contratoService;
+
     @GetMapping
     public List<PagoDTO> obtenerPagos() { // Listar
         return servicio.listarPagos().stream().map(p -> modelM.map(p, PagoDTO.class)).collect(Collectors.toList());
@@ -30,6 +34,7 @@ public class PagoController {
     @PostMapping
     public PagoDTO agregarPago(@RequestBody PagoDTO dto) { // Insertar
         Pago p = modelM.map(dto, Pago.class);
+        p.setContrato(contratoService.buscarContratoPorId(dto.getContrato().getIdContrato()));
         return modelM.map(servicio.guardarPago(p), PagoDTO.class); // Regresa el pago con el id generado
     }
 

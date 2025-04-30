@@ -3,6 +3,8 @@ package com.geovivienda.geovivienda.controllers;
 import com.geovivienda.geovivienda.dtos.VisitaDTO;
 import com.geovivienda.geovivienda.entities.Visita;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import com.geovivienda.geovivienda.services.interfaces.IVisitaService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,12 @@ public class VisitaController {
     @Autowired
     private IVisitaService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
     public List<VisitaDTO> obtenerVisitas() {
         return servicio.listarVisitas().stream()
@@ -28,7 +36,10 @@ public class VisitaController {
     }
     @PostMapping
     public VisitaDTO agregarVisita(@RequestBody VisitaDTO dto) {
-        return modelM.map(this.servicio.guardarVisita(modelM.map(dto, Visita.class)),VisitaDTO.class);
+        var visita = modelM.map(dto, Visita.class);
+        visita.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        visita.setUsuario(userService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
+        return modelM.map(this.servicio.guardarVisita(visita),VisitaDTO.class);
 
     }
     @GetMapping("/{id}")

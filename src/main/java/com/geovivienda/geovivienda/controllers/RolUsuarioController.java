@@ -9,6 +9,7 @@ import com.geovivienda.geovivienda.services.interfaces.IRolUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,6 +26,7 @@ public class RolUsuarioController {
     private IRolUsuarioService servicio;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<RolUsuarioDTO> obtenerRolUsuarios() {
         return servicio.listarRolesUsuario().stream()
                 .map(p -> modelM.map(p, RolUsuarioDTO.class)).collect(Collectors.toList());
