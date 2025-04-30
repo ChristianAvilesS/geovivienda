@@ -22,4 +22,10 @@ public class PagoServiceImpl implements IPagoService {
     public Pago guardarPago(Pago pago){
         return repos.save(pago);
     }
+
+    @Override
+    public List<String[]> importByTipeCoin() {return repos.importByTipeCoin();}
+
+    @Override
+    public List<Object[]> paymentsByDate() {return repos.paymentsByDate();}
 }
