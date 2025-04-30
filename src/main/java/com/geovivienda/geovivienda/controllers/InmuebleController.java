@@ -11,6 +11,7 @@ import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ public class InmuebleController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('VENDEDOR')")
     public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
         return modelM.map(servicio.guardarInmueble(modelM.map(dto, Inmueble.class)), InmuebleDTO.class);
     }
@@ -49,6 +51,7 @@ public class InmuebleController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('VENDEDOR', 'ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarInmueble(@PathVariable int id) {
         var inmueble = servicio.buscarInmueblePorId(id);
         servicio.eliminarInmueble(inmueble);

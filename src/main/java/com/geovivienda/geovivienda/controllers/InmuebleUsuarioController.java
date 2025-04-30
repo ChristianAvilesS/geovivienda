@@ -10,6 +10,7 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,6 +33,7 @@ public class InmuebleUsuarioController {
     private IUsuarioService usuarioService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<InmuebleUsuarioDTO> obtenerInmuebleUsuarios() {
         return servicio.listarInmuebleUsuarios().stream()
                 .map(i-> modelM.map(i, InmuebleUsuarioDTO.class)).collect(Collectors.toList());
