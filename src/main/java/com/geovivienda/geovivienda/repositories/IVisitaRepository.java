@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface IVisitaRepository extends JpaRepository<Visita, Integer> {
     @Query("SELECT v FROM Visita v "+
-        "WHERE EXTRACT(DAY FROM v.fechaVisita) = EXTRACT(DAY FROM :fecha) " +
+        "WHERE DATE(v.fechaVisita) = DATE(:fecha) " +
         " AND v.inmueble.idInmueble= :id")
     List<Visita> buscarVisitaPorInmuebleYFecha(@Param("fecha") Instant fecha, @Param("id") Integer id);
 }

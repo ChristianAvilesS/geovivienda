@@ -8,12 +8,12 @@ import java.util.List;
 
 public interface IRolUsuarioService {
 
-    public List<RolUsuario> listarRolesUsuario();
-    public RolUsuario buscarRolUsuarioPorId(RolUsuarioId id);
+    List<RolUsuario> listarRolesUsuario();
+    RolUsuario buscarRolUsuarioPorId(RolUsuarioId id);
 
     // Cumple la función de insertar y actualizar
-    public RolUsuario guardarRolUsuario(RolUsuario rolUsuario);
-    public void eliminarRolUsuario(RolUsuario rolUsuario);
+    RolUsuario guardarRolUsuario(RolUsuario rolUsuario);
+    void eliminarRolUsuario(RolUsuario rolUsuario);
     List<RolUsuario> buscarRolesPorUsuario(int idUsuario);
     List<String[]> findPredominantUserRol(@Param("id") int idUsuario);
 }

@@ -12,5 +12,4 @@ public interface IUsuarioService {
     // Cumple la función de insertar y actualizar
     Usuario guardarUsuario(Usuario usuario);
     Usuario eliminarUsuario(Usuario usuario);
-    Usuario verificarLogin(Usuario usuario);
 }

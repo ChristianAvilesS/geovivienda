@@ -16,6 +16,7 @@ import java.time.Instant;
 @Table(name = "visitas")
 public class Visita {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_visita", nullable = false)
     private Integer id;
 

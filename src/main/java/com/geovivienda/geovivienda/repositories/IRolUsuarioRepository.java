@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface IRolUsuarioRepository extends JpaRepository<RolUsuario, RolUsuarioId> {
-    @Query("SELECT ur FROM RolUsuario ur WHERE ur.id.idRol = :id")
+    @Query("SELECT ur FROM RolUsuario ur WHERE ur.id.idUsuario = :id ORDER BY ur.rol.idRol DESC")
     List<RolUsuario> buscarRolesPorUsuario(@Param("id") int idUsuario);
 
     @Query("SELECT ru.id.idUsuario, r.rol FROM RolUsuario ru" +
