@@ -6,6 +6,8 @@ import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
 import com.geovivienda.geovivienda.entities.Anuncio;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IAnuncioService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +27,12 @@ public class AnuncioController {
     @Autowired
     private IAnuncioService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
     public List<AnuncioDTO> obtenerAnuncios() {
         return servicio.listarAnuncios().stream()
@@ -33,7 +41,10 @@ public class AnuncioController {
 
     @PostMapping
     public AnuncioDTO agregarAnuncio(@RequestBody AnuncioDTO dto) {
-        return modelM.map(this.servicio.guardarAnuncio(modelM.map(dto, Anuncio.class)), AnuncioDTO.class);
+        var anuncio = modelM.map(dto, Anuncio.class);
+        anuncio.setAnunciante(userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario()));
+        anuncio.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        return modelM.map(this.servicio.guardarAnuncio(anuncio), AnuncioDTO.class);
     }
 
     @GetMapping("/{id}")

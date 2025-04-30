@@ -4,7 +4,9 @@ import com.geovivienda.geovivienda.dtos.InmuebleUsuarioDTO;
 import com.geovivienda.geovivienda.entities.InmuebleUsuario;
 import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleUsuarioService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,12 @@ public class InmuebleUsuarioController {
     @Autowired
     private IInmuebleUsuarioService servicio;
 
+    @Autowired
+    private IInmuebleService inmuebleService;
+
+    @Autowired
+    private IUsuarioService usuarioService;
+
     @GetMapping
     public List<InmuebleUsuarioDTO> obtenerInmuebleUsuarios() {
         return servicio.listarInmuebleUsuarios().stream()
@@ -31,8 +39,10 @@ public class InmuebleUsuarioController {
 
     @PostMapping
     public InmuebleUsuarioDTO agregarInmuebleUsuario(@RequestBody InmuebleUsuarioDTO dto) {
-        return modelM.map(servicio.guardarInmuebleUsuario(modelM.map(dto, InmuebleUsuario.class))
-                , InmuebleUsuarioDTO.class);
+        var iu = modelM.map(dto, InmuebleUsuario.class);
+        iu.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        iu.setUsuario(usuarioService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
+        return modelM.map(servicio.guardarInmuebleUsuario(iu), InmuebleUsuarioDTO.class);
     }
 
     @GetMapping("/buscar")

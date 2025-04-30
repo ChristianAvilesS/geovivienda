@@ -1,11 +1,11 @@
 package com.geovivienda.geovivienda.controllers;
 
-import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
 import com.geovivienda.geovivienda.dtos.CantidadImagenesXInmuebleDTO;
 import com.geovivienda.geovivienda.dtos.ImagenDTO;
 import com.geovivienda.geovivienda.entities.Imagen;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IImagenService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +25,9 @@ public class ImagenController {
     @Autowired
     private IImagenService servicio;
 
+    @Autowired
+    private IInmuebleService inService;
+
     @GetMapping
     public List<ImagenDTO> obtenerImagenes() {
         return servicio.listarImagenes().stream()
@@ -33,7 +36,10 @@ public class ImagenController {
 
     @PostMapping
     public ImagenDTO agregarImagen(@RequestBody ImagenDTO dto) {
-        return modelM.map(this.servicio.guardarImagen(modelM.map(dto, Imagen.class)), ImagenDTO.class);
+        Imagen imagen = modelM.map(dto, Imagen.class);
+        imagen.setInmueble(inService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+
+        return modelM.map(this.servicio.guardarImagen(imagen), ImagenDTO.class);
     }
 
     @GetMapping("/{id}")

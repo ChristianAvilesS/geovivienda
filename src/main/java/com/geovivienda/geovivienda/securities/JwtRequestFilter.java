@@ -1,6 +1,7 @@
 package com.geovivienda.geovivienda.securities;
 
 
+import com.geovivienda.geovivienda.services.implementations.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -13,7 +14,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import pe.edu.upc.demo3157api.servicesimplements.JwtUserDetailsService;
 
 import java.io.IOException;
 

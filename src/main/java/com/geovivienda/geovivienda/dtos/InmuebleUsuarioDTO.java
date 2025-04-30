@@ -13,7 +13,7 @@ public class InmuebleUsuarioDTO {
 
     private Usuario usuario;
 
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
     private Boolean esDuenio;
 

@@ -9,6 +9,7 @@ import com.geovivienda.geovivienda.services.interfaces.IDireccionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -27,6 +28,7 @@ public class DireccionController {
     private IDireccionService servicio;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<DireccionDTO> obtenerDirecciones() {
         return servicio.listarDirecciones().stream().map(p -> modelM.map(p, DireccionDTO.class))
                 .collect(Collectors.toList());
@@ -70,6 +72,7 @@ public class DireccionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarDireccion(@PathVariable int id) {
         var direccion = servicio.buscarDireccionPorId(id);
         servicio.eliminarDireccion(direccion);
