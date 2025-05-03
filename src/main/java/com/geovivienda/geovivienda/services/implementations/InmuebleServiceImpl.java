@@ -47,5 +47,10 @@ public class InmuebleServiceImpl implements IInmuebleService {
         return repos.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo);
     }
 
+    @Override
+    public List<Inmueble> listarFavoritosPorUsuario(int idUsuario) {
+        return repos.listarFavoritosPorUsuario(idUsuario);
+    }
+
 
 }

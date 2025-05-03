@@ -123,5 +123,22 @@ public class InmuebleController {
                     return dto;
                 }).collect(Collectors.toList());
     }
+
+    @GetMapping("/favoritos")
+    public List<InmuebleDireccionDTO> mostrarFavoritos(@RequestParam("idUsuario") int idUsuario) {
+
+        return servicio.listarFavoritosPorUsuario(idUsuario)
+                .stream()
+                .map(i -> {
+                    var dto = new InmuebleDireccionDTO();
+                    dto.setNombre(i.getNombre());
+                    dto.setDireccion(i.getDireccion().getDireccion());
+                    dto.setArea(i.getArea());
+                    dto.setDescripcion(i.getDescripcion());
+                    dto.setTipo(i.getTipo());
+                    dto.setPrecioBase(i.getPrecioBase());
+                    return dto;
+                }).collect(Collectors.toList());
+    }
 }
 

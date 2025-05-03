@@ -17,4 +17,5 @@ public interface IInmuebleService {
                                     BigDecimal minPrecio, BigDecimal maxPrecio,
                                     BigDecimal latitud, BigDecimal longitud,
                                     BigDecimal radio, String tipo);
+    List<Inmueble> listarFavoritosPorUsuario(int idUsuario);
 }

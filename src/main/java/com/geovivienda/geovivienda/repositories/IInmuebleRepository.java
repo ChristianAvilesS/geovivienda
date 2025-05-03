@@ -21,18 +21,22 @@ public interface IInmuebleRepository extends JpaRepository<Inmueble, Integer> {
                                                     @Param("rango") BigDecimal rango);
 
     @Query(value = "select i from Inmueble i join Direccion d on i.direccion.idDireccion = d.idDireccion \n"+
-                    "where d.longitud between (:longitud - :rango) and (:longitud + :rango) and\n"+
-                    "d.latitud between (:latitud -:rango) and (:latitud + :rango) and \n"+
-                    "i.estado = 'DISPONIBLE' and\n"+
-                    "(:minArea is null or i.area >= :minArea) and\n"+
-                    "(:maxArea is null or i.area <= :maxArea) and\n"+
-                    "(:minPrecio is null or i.precioBase >= :minPrecio) and\n"+
-                    "(:maxPrecio is null or i.precioBase <= :maxPrecio) and\n"+
-                    "(:tipo is null or i.tipo like :tipo)\n"+
+                    " where d.longitud between (:longitud - :rango) and (:longitud + :rango) and\n"+
+                    " d.latitud between (:latitud -:rango) and (:latitud + :rango) and \n"+
+                    " i.estado = 'DISPONIBLE' and\n"+
+                    " (:minArea is null or i.area >= :minArea) and\n"+
+                    " (:maxArea is null or i.area <= :maxArea) and\n"+
+                    " (:minPrecio is null or i.precioBase >= :minPrecio) and\n"+
+                    " (:maxPrecio is null or i.precioBase <= :maxPrecio) and\n"+
+                    " (:tipo is null or i.tipo like :tipo)\n"+
                     " order by i.idInmueble"
     )
     List<Inmueble> filtrarInmuebles(@Param("minArea") BigDecimal minArea, @Param("maxArea") BigDecimal maxArea,
                                     @Param("minPrecio") BigDecimal minPrecio, @Param("maxPrecio") BigDecimal maxPrecio,
                                     @Param("latitud") BigDecimal latitud, @Param("longitud") BigDecimal longitud,
                                     @Param("rango") BigDecimal rango, @Param("tipo") String tipo);
+
+    @Query(value = "select iu.inmueble from InmuebleUsuario iu \n"+
+                    " where iu.usuario.idUsuario = :idUsuario and iu.esFavorito = true")
+    List<Inmueble> listarFavoritosPorUsuario(@Param("idUsuario") int idUsuario);
 }
