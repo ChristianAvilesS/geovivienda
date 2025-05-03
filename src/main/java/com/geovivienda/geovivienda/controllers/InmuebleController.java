@@ -100,11 +100,18 @@ public class InmuebleController {
                 }).collect(Collectors.toList());
     }
 
-    @GetMapping("/filtrado_por_area")
+    @GetMapping("/filtrado")
     public List<InmuebleDireccionDTO> filtrarInmueblesRangoArea(@RequestParam("minArea") BigDecimal minArea,
-                                                                    @RequestParam("maxArea") BigDecimal maxArea) {
+                                                                @RequestParam("maxArea") BigDecimal maxArea,
+                                                                @RequestParam("minPrecio") BigDecimal minPrecio,
+                                                                @RequestParam("maxPrecio") BigDecimal maxPrecio,
+                                                                @RequestParam("latitud") BigDecimal latitud,
+                                                                @RequestParam("longitud") BigDecimal longitud,
+                                                                @RequestParam("radio") BigDecimal radio,
+                                                                @RequestParam("tipo") String tipo) {
 
-        return servicio.filtrarInmueblesRangoArea(minArea, maxArea).stream()
+        return servicio.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo)
+                .stream()
                 .map(i -> {
                     var dto = new InmuebleDireccionDTO();
                     dto.setNombre(i.getNombre());
@@ -116,7 +123,5 @@ public class InmuebleController {
                     return dto;
                 }).collect(Collectors.toList());
     }
-
-
 }
 

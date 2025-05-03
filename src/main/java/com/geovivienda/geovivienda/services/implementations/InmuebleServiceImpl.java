@@ -41,7 +41,11 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
-    public List<Inmueble> filtrarInmueblesRangoArea(BigDecimal minArea, BigDecimal maxArea) {
-        return repos.filtrarInmueblesRangoArea(minArea, maxArea);
+    public List<Inmueble> filtrarInmuebles(BigDecimal minArea, BigDecimal maxArea,
+                                           BigDecimal minPrecio, BigDecimal maxPrecio,
+                                           BigDecimal latitud, BigDecimal longitud, BigDecimal radio, String tipo) {
+        return repos.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo);
     }
+
+
 }
