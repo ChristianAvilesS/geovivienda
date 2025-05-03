@@ -64,4 +64,12 @@ public class InmuebleUsuarioController {
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
     }
+
+    @PutMapping("/marcardesmarcarfavorito")
+    public ResponseEntity<Map<String,Boolean>> marcarDesmarcarFavorito(@RequestParam int idInmueble, @RequestParam int idUsuario) {
+        var inmuebleUsuario = servicio.marcarDesmarcarFavorito(idInmueble, idUsuario);
+        Map<String,Boolean> respuesta = new HashMap<>();
+        respuesta.put("esFavorito", inmuebleUsuario.getEsFavorito());
+        return ResponseEntity.ok(respuesta);
+    }
 }

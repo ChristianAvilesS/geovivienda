@@ -34,4 +34,11 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
     public void eliminarInmuebleUsuario(InmuebleUsuario inmuebleUsuario) {
         repo.delete(inmuebleUsuario);
     }
+
+    @Override
+    public InmuebleUsuario marcarDesmarcarFavorito(int idInmueble, int idUsuario) {
+        InmuebleUsuario inmuebleUsuario = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuario);
+        inmuebleUsuario.setEsFavorito(!inmuebleUsuario.getEsFavorito());
+        return repo.save(inmuebleUsuario);
+    }
 }
