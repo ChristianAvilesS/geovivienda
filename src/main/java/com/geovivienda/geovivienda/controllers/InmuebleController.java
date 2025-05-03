@@ -84,17 +84,10 @@ public class InmuebleController {
 
     @GetMapping("/inmuebles_cerca_usuario")
     public List<InmuebleDireccionDTO> obtenerInmueblesCercaAUsuario(@RequestParam("lon") BigDecimal longitud,
-                                                                      @RequestParam("lat") BigDecimal latitud) {
+                                                                    @RequestParam("lat") BigDecimal latitud) {
+        BigDecimal rango = BigDecimal.valueOf(0.01); // Radio de 1.1 km aprox
 
-        BigDecimal radio = BigDecimal.valueOf(0.01); // Radio de 1.1 km aprox
-
-        BigDecimal minLong = longitud.subtract(radio);
-        BigDecimal maxLong = longitud.add(radio);
-        BigDecimal minLat = latitud.subtract(radio);
-        BigDecimal maxLat = latitud.add(radio);
-
-
-        return servicio.buscarInmueblesCercanosUsuario(minLong, maxLong, minLat, maxLat).stream()
+        return servicio.buscarInmueblesEnLugarEnRango(longitud, latitud, rango).stream()
                 .map(i -> {
                     var dto = new InmuebleDireccionDTO();
                     dto.setNombre(i.getNombre());
@@ -106,6 +99,7 @@ public class InmuebleController {
                     return dto;
                 }).collect(Collectors.toList());
     }
+
 
 }
 
