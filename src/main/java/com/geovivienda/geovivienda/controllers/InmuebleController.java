@@ -101,14 +101,19 @@ public class InmuebleController {
     }
 
     @GetMapping("/filtrado")
-    public List<InmuebleDireccionDTO> filtrarInmueblesRangoArea(@RequestParam("minArea") BigDecimal minArea,
-                                                                @RequestParam("maxArea") BigDecimal maxArea,
-                                                                @RequestParam("minPrecio") BigDecimal minPrecio,
-                                                                @RequestParam("maxPrecio") BigDecimal maxPrecio,
+    public List<InmuebleDireccionDTO> filtrarInmueblesRangoArea(@RequestParam(value = "minArea", required = false)
+                                                                    BigDecimal minArea,
+                                                                @RequestParam(value = "maxArea", required = false)
+                                                                    BigDecimal maxArea,
+                                                                @RequestParam(value = "minPrecio", required = false)
+                                                                    BigDecimal minPrecio,
+                                                                @RequestParam(value = "maxPrecio", required = false)
+                                                                    BigDecimal maxPrecio,
                                                                 @RequestParam("latitud") BigDecimal latitud,
                                                                 @RequestParam("longitud") BigDecimal longitud,
                                                                 @RequestParam("radio") BigDecimal radio,
-                                                                @RequestParam("tipo") String tipo) {
+                                                                @RequestParam(value = "tipo", required = false)
+                                                                    String tipo) {
 
         return servicio.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo)
                 .stream()
