@@ -13,4 +13,5 @@ public interface IInmuebleService {
     Inmueble guardarInmueble(Inmueble inmueble);
     void eliminarInmueble(Inmueble inmueble);
     List<Inmueble> buscarInmueblesEnLugarEnRango(BigDecimal lon, BigDecimal lat, BigDecimal rango);
+    List<Inmueble> filtrarInmueblesRangoArea(BigDecimal minArea, BigDecimal maxArea);
 }

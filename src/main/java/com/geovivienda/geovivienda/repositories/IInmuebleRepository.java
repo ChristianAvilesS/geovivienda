@@ -19,4 +19,9 @@ public interface IInmuebleRepository extends JpaRepository<Inmueble, Integer> {
             " ORDER BY i.idInmueble")
     List<Inmueble> buscarInmueblesEnLugarEnRango(@Param("lon") BigDecimal lon, @Param("lat") BigDecimal lat,
                                                     @Param("rango") BigDecimal rango);
+
+    @Query(value = "select i from Inmueble i where i.estado = 'DISPONIBLE'\n"+
+                    "and i.area between :minArea and :maxArea")
+    List<Inmueble> filtrarInmueblesRangoArea(@Param("minArea") BigDecimal minArea,
+                                             @Param("maxArea") BigDecimal maxArea);
 }

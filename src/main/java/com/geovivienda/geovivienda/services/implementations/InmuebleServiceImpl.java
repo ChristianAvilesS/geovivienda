@@ -39,4 +39,9 @@ public class InmuebleServiceImpl implements IInmuebleService {
     public List<Inmueble> buscarInmueblesEnLugarEnRango(BigDecimal lon, BigDecimal lat, BigDecimal rango) {
         return repos.buscarInmueblesEnLugarEnRango(lon, lat, rango);
     }
+
+    @Override
+    public List<Inmueble> filtrarInmueblesRangoArea(BigDecimal minArea, BigDecimal maxArea) {
+        return repos.filtrarInmueblesRangoArea(minArea, maxArea);
+    }
 }
