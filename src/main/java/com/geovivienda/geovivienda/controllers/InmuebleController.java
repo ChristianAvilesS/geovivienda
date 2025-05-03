@@ -84,17 +84,10 @@ public class InmuebleController {
 
     @GetMapping("/inmuebles_cerca_usuario")
     public List<InmuebleDireccionDTO> obtenerInmueblesCercaAUsuario(@RequestParam("lon") BigDecimal longitud,
-                                                                      @RequestParam("lat") BigDecimal latitud) {
+                                                                    @RequestParam("lat") BigDecimal latitud) {
+        BigDecimal rango = BigDecimal.valueOf(0.01); // Radio de 1.1 km aprox
 
-        BigDecimal radio = BigDecimal.valueOf(0.01); // Radio de 1.1 km aprox
-
-        BigDecimal minLong = longitud.subtract(radio);
-        BigDecimal maxLong = longitud.add(radio);
-        BigDecimal minLat = latitud.subtract(radio);
-        BigDecimal maxLat = latitud.add(radio);
-
-
-        return servicio.buscarInmueblesCercanosUsuario(minLong, maxLong, minLat, maxLat).stream()
+        return servicio.buscarInmueblesEnLugarEnRango(longitud, latitud, rango).stream()
                 .map(i -> {
                     var dto = new InmuebleDireccionDTO();
                     dto.setNombre(i.getNombre());
@@ -107,5 +100,50 @@ public class InmuebleController {
                 }).collect(Collectors.toList());
     }
 
+    @GetMapping("/filtrado")
+    public List<InmuebleDireccionDTO> filtrarInmueblesRangoArea(@RequestParam(value = "minArea", required = false)
+                                                                    BigDecimal minArea,
+                                                                @RequestParam(value = "maxArea", required = false)
+                                                                    BigDecimal maxArea,
+                                                                @RequestParam(value = "minPrecio", required = false)
+                                                                    BigDecimal minPrecio,
+                                                                @RequestParam(value = "maxPrecio", required = false)
+                                                                    BigDecimal maxPrecio,
+                                                                @RequestParam("latitud") BigDecimal latitud,
+                                                                @RequestParam("longitud") BigDecimal longitud,
+                                                                @RequestParam("radio") BigDecimal radio,
+                                                                @RequestParam(value = "tipo", required = false)
+                                                                    String tipo) {
+
+        return servicio.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo)
+                .stream()
+                .map(i -> {
+                    var dto = new InmuebleDireccionDTO();
+                    dto.setNombre(i.getNombre());
+                    dto.setDireccion(i.getDireccion().getDireccion());
+                    dto.setArea(i.getArea());
+                    dto.setDescripcion(i.getDescripcion());
+                    dto.setTipo(i.getTipo());
+                    dto.setPrecioBase(i.getPrecioBase());
+                    return dto;
+                }).collect(Collectors.toList());
+    }
+
+    @GetMapping("/favoritos")
+    public List<InmuebleDireccionDTO> mostrarFavoritos(@RequestParam("idUsuario") int idUsuario) {
+
+        return servicio.listarFavoritosPorUsuario(idUsuario)
+                .stream()
+                .map(i -> {
+                    var dto = new InmuebleDireccionDTO();
+                    dto.setNombre(i.getNombre());
+                    dto.setDireccion(i.getDireccion().getDireccion());
+                    dto.setArea(i.getArea());
+                    dto.setDescripcion(i.getDescripcion());
+                    dto.setTipo(i.getTipo());
+                    dto.setPrecioBase(i.getPrecioBase());
+                    return dto;
+                }).collect(Collectors.toList());
+    }
 }
 
