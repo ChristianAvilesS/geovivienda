@@ -41,7 +41,16 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
-    public List<Inmueble> buscarInmueblesCercanosUsuario(BigDecimal minLong, BigDecimal maxLong, BigDecimal minLat, BigDecimal maxLat) {
-        return repos.buscarInmueblesCercanosUsuario(minLong, maxLong, minLat, maxLat);
+    public List<Inmueble> filtrarInmuebles(BigDecimal minArea, BigDecimal maxArea,
+                                           BigDecimal minPrecio, BigDecimal maxPrecio,
+                                           BigDecimal latitud, BigDecimal longitud, BigDecimal radio, String tipo) {
+        return repos.filtrarInmuebles(minArea, maxArea,minPrecio, maxPrecio, latitud, longitud, radio, tipo);
     }
+
+    @Override
+    public List<Inmueble> listarFavoritosPorUsuario(int idUsuario) {
+        return repos.listarFavoritosPorUsuario(idUsuario);
+    }
+
+
 }
