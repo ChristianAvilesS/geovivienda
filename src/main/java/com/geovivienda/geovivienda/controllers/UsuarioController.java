@@ -9,6 +9,7 @@ import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +26,9 @@ public class UsuarioController {
     @Autowired
     private IDireccionService dirService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<UsuarioDTO> obtenerUsuarios() {
@@ -35,6 +39,8 @@ public class UsuarioController {
     @PostMapping // Cualquiera puede, sin autenticar
     public UsuarioDTO agregarUsuario(@RequestBody UsuarioDTO dto) {
         Usuario usuario = modelM.map(dto, Usuario.class);
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setInactivo(false);
         if (usuario.getDireccion().getIdDireccion() != 0) {
             usuario.setDireccion(dirService.buscarDireccionPorId(usuario.getDireccion().getIdDireccion()));
         }
@@ -71,8 +77,7 @@ public class UsuarioController {
         if (usuario == null) {
             throw new RecursoNoEncontradoException("No se encontró el id: " + id);
         }
-        servicio.eliminarUsuario(usuario);
-        return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
+        return ResponseEntity.ok(modelM.map(servicio.eliminarUsuario(usuario), UsuarioDTO.class));
     }
 
 

@@ -32,7 +32,7 @@ public class InmuebleServiceImpl implements IInmuebleService {
 
     @Override
     public void eliminarInmueble(Inmueble inmueble) {
-        repos.delete(inmueble);
+        repos.deleteLogically(inmueble.getIdInmueble());
     }
 
     @Override
