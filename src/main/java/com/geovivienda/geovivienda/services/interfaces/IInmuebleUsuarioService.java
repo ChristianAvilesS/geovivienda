@@ -13,4 +13,5 @@ public interface IInmuebleUsuarioService {
     void eliminarInmuebleUsuario(InmuebleUsuario usuario);
     InmuebleUsuario marcarDesmarcarFavorito(int idInmueble, int idUsuario);
     InmuebleUsuario solicitarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario aprobarCompraInmueble(int idInmueble, int idUsuario);
 }
