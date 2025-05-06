@@ -4,6 +4,8 @@ import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -29,5 +31,11 @@ public class InmuebleUsuario {
 
     @Column(name = "es_favorito")
     private Boolean esFavorito;
+
+    @Column(name = "estado_solicitud")
+    private String estadoSolicitud; //Estados: ninguno, solicitado, aprobado, rechazado, comprado
+
+    @Column(name = "fecha_solicitud")
+    private LocalDate fechaSolicitud;
 
 }

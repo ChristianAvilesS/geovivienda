@@ -72,4 +72,15 @@ public class InmuebleUsuarioController {
         respuesta.put("esFavorito", inmuebleUsuario.getEsFavorito());
         return ResponseEntity.ok(respuesta);
     }
+
+    @PutMapping("/solicitarCompraInmueble")
+    public ResponseEntity<InmuebleUsuarioDTO> solicitarCompraInmueble(@RequestParam int idInmueble,
+                                                                      @RequestParam int idUsuario) {
+        var inmuebleUsuario = servicio.solicitarCompraInmueble(idInmueble, idUsuario);
+        if(inmuebleUsuario != null){
+            return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
+        }
+        throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
+                " - idUsuario: " + idUsuario);
+    }
 }

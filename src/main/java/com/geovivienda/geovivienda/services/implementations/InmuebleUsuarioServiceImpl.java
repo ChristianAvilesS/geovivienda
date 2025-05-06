@@ -7,6 +7,7 @@ import com.geovivienda.geovivienda.services.interfaces.IInmuebleUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -40,5 +41,16 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
         InmuebleUsuario inmuebleUsuario = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuario);
         inmuebleUsuario.setEsFavorito(!inmuebleUsuario.getEsFavorito());
         return repo.save(inmuebleUsuario);
+    }
+
+    @Override
+    public InmuebleUsuario solicitarCompraInmueble(int idInmueble, int idUsuario) {
+        InmuebleUsuario inmuebleUsuario = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuario);
+        if(inmuebleUsuario.getInmueble().getEstado().equals("DISPONIBLE")) {
+            inmuebleUsuario.setEstadoSolicitud("SOLICITADO");
+            inmuebleUsuario.setFechaSolicitud(LocalDate.now());
+            return repo.save(inmuebleUsuario);
+        }
+        return null;
     }
 }
