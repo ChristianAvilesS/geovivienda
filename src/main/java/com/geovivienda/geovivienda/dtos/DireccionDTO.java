@@ -1,9 +1,9 @@
 package com.geovivienda.geovivienda.dtos;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -20,5 +20,15 @@ public class DireccionDTO {
         this.direccion = direccion;
         this.latitud = latitud;
         this.longitud = longitud;
+    }
+
+    @Override
+    public String toString() {
+        return "DireccionDTO{" +
+                "idDireccion=" + idDireccion +
+                ", direccion='" + direccion + '\'' +
+                ", latitud=" + latitud +
+                ", longitud=" + longitud +
+                '}';
     }
 }

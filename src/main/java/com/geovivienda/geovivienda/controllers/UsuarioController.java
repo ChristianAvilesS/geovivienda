@@ -1,6 +1,10 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.DireccionDTO;
+import com.geovivienda.geovivienda.entities.Direccion;
+import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.externalapis.GeoapifyConnection;
 import com.geovivienda.geovivienda.services.interfaces.IDireccionService;
 import org.modelmapper.ModelMapper;
 import com.geovivienda.geovivienda.dtos.UsuarioDTO;
@@ -12,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,9 +48,15 @@ public class UsuarioController {
         usuario.setInactivo(false);
         if (usuario.getDireccion().getIdDireccion() != 0) {
             usuario.setDireccion(dirService.buscarDireccionPorId(usuario.getDireccion().getIdDireccion()));
-        }
-        else {
-            usuario.setDireccion(dirService.guardarDireccion(usuario.getDireccion()));
+        } else {
+            DireccionDTO dtoDir = null;
+            try {
+                dtoDir = new GeoapifyConnection(dto.getDireccion().getDireccion()).getDireccionDTOAsociada();
+            } catch (IOException e) {
+                throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
+            }
+
+            usuario.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
         }
         return modelM.map(servicio.guardarUsuario(usuario), UsuarioDTO.class);
     }
@@ -64,7 +75,7 @@ public class UsuarioController {
         Usuario usuario = this.servicio.buscarUsuarioPorId(id);
         usuario.setNombre(usuarioRecibido.getNombre());
         usuario.setTelefono(usuarioRecibido.getTelefono());
-        usuario.setDireccion(usuarioRecibido.getDireccion());
+        usuario.setDireccion(dirService.buscarDireccionPorId(usuarioRecibido.getDireccion().getIdDireccion()));
         usuario.setEmail(usuarioRecibido.getEmail());
 
         this.servicio.guardarUsuario(usuario);

@@ -3,7 +3,6 @@ package com.geovivienda.geovivienda.services.implementations;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
 import com.geovivienda.geovivienda.repositories.IInmuebleUsuarioRepository;
-import com.geovivienda.geovivienda.repositories.IRolUsuarioRepository;
 import com.geovivienda.geovivienda.repositories.IUsuarioRepository;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
