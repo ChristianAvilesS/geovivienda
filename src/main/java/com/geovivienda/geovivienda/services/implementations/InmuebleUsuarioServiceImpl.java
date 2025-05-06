@@ -63,4 +63,14 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
         }
         return null;
     }
+
+    @Override
+    public InmuebleUsuario rechazarCompraInmueble(int idInmueble, int idUsuario) {
+        InmuebleUsuario inmuebleUsuario = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuario);
+        if(inmuebleUsuario.getEstadoSolicitud().equals("SOLICITADO")) {
+            inmuebleUsuario.setEstadoSolicitud("RECHAZADO");
+            return repo.save(inmuebleUsuario);
+        }
+        return null;
+    }
 }

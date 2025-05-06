@@ -94,4 +94,15 @@ public class InmuebleUsuarioController {
         throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
                 " - idUsuario: " + idUsuario);
     }
+
+    @PutMapping("/rechazarcomprainmueble")
+    public ResponseEntity<InmuebleUsuarioDTO> rechazarCompraInmueble(@RequestParam int idInmueble,
+                                                                    @RequestParam int idUsuario) {
+        var inmuebleUsuario = servicio.rechazarCompraInmueble(idInmueble, idUsuario);
+        if(inmuebleUsuario != null){
+            return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
+        }
+        throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
+                " - idUsuario: " + idUsuario);
+    }
 }
