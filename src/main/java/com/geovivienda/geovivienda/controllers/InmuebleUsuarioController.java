@@ -1,18 +1,20 @@
 package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.InmuebleUsuarioDTO;
+import com.geovivienda.geovivienda.entities.Contrato;
 import com.geovivienda.geovivienda.entities.InmuebleUsuario;
 import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
-import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
-import com.geovivienda.geovivienda.services.interfaces.IInmuebleUsuarioService;
-import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
+import com.geovivienda.geovivienda.services.interfaces.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,12 @@ public class InmuebleUsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
+
+    @Autowired
+    private IPagoService pagoService;
+
+    @Autowired
+    private IContratoService contratoService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -86,13 +94,32 @@ public class InmuebleUsuarioController {
 
     @PutMapping("/aprobarcomprainmueble")
     public ResponseEntity<InmuebleUsuarioDTO> aprobarCompraInmueble(@RequestParam int idInmueble,
-                                                                      @RequestParam int idUsuario) {
-        var inmuebleUsuario = servicio.aprobarCompraInmueble(idInmueble, idUsuario);
+                                                                    @RequestParam int idUsuarioComprador,
+                                                                    @RequestParam int idUsuarioVendedor,
+                                                                    @RequestParam String descripcionContrato,
+                                                                    @RequestParam String tipoContrato,
+                                                                    @RequestParam LocalDate fechaVencimientoContrato) {
+        var inmuebleUsuario = servicio.aprobarCompraInmueble(idInmueble, idUsuarioComprador);
+        BigDecimal precioBaseInmueble = inmuebleService.buscarInmueblePorId(idInmueble).getPrecioBase();
+
         if(inmuebleUsuario != null){
+            var contrato = new Contrato();
+
+            contrato.setDescripcion(descripcionContrato);
+            contrato.setTipoContrato(tipoContrato);
+            contrato.setMontoTotal(precioBaseInmueble);
+            contrato.setFechaFirma(Instant.from(LocalDate.now()));
+            contrato.setFechaVencimiento(Instant.from(fechaVencimientoContrato));
+            contrato.setInmueble(inmuebleService.buscarInmueblePorId(idInmueble));
+            contrato.setVendedor(usuarioService.buscarUsuarioPorId(idUsuarioVendedor));
+            contrato.setComprador(usuarioService.buscarUsuarioPorId(idUsuarioComprador));
+
+            contratoService.guardarContrato(contrato);
+            
             return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
         }
         throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
-                " - idUsuario: " + idUsuario);
+                " - idUsuario: " + idUsuarioComprador);
     }
 
     @PutMapping("/rechazarcomprainmueble")
