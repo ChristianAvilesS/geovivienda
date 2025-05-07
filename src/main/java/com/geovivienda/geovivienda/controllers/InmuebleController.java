@@ -44,7 +44,7 @@ public class InmuebleController {
                 .collect(Collectors.toList());
 
         log.info("\nInmuebles:");
-        inmuebles.forEach(p -> log.debug("{}", p));
+        inmuebles.forEach(p -> log.info("{}", p));
 
         log.info("\nFin de recuperación de inmuebles\n");
         return inmuebles;
@@ -54,16 +54,16 @@ public class InmuebleController {
     @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
         log.info("\nInicio de registro de inmueble\n");
-        log.debug("Inmueble obtenido: {}", dto);
+        log.info("Inmueble obtenido: {}", dto);
         var inmueble = modelM.map(dto, Inmueble.class);
-        if (dto.getDireccion().getIdDireccion() != 0) {
+        if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
             inmueble.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
         } else {
             DireccionDTO dtoDir = getDireccionFromAPI(dto.getDireccion().getDireccion());
             inmueble.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
         }
         var dtoTemp = modelM.map(servicio.guardarInmueble(inmueble), InmuebleDTO.class);
-        log.debug("Inmueble guardado: {}", dtoTemp);
+        log.info("Inmueble guardado: {}", dtoTemp);
         log.info("\nFin de registro de inmueble\n");
         return dtoTemp;
     }
@@ -73,11 +73,11 @@ public class InmuebleController {
         log.info("\nInicio de búsqueda de inmueble\n");
         Inmueble inmueble = servicio.buscarInmueblePorId(id);
         if (inmueble != null) {
-            log.debug("\nInmueble encontrado: {}", modelM.map(inmueble, InmuebleDTO.class));
+            log.info("\nInmueble encontrado: {}", modelM.map(inmueble, InmuebleDTO.class));
             return ResponseEntity.ok(modelM.map(inmueble, InmuebleDTO.class));
         }
 
-        log.error("Error al buscar el inmueble, id no encontrado");
+        log.info("Error al buscar el inmueble, id no encontrado");
         throw new RecursoNoEncontradoException("No se encontró el inmueble con el id " + id);
     }
 
@@ -89,7 +89,7 @@ public class InmuebleController {
         servicio.eliminarInmueble(inmueble);
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
-        log.debug("Inmueble eliminado: {}", inmueble);
+        log.info("Inmueble eliminado: {}", inmueble);
         return ResponseEntity.ok(respuesta);
     }
 
@@ -101,7 +101,7 @@ public class InmuebleController {
         var resultado = servicio.buscarInmueblesEnLugarEnRango(direccion.getLongitud(),
                         direccion.getLatitud(), rango).stream().map(this::createInmuebleDireccionDTO).toList();
         log.info("Resultado:");
-        resultado.forEach(i -> log.debug("{}", i));
+        resultado.forEach(i -> log.info("{}", i));
         return resultado;
     }
 
@@ -114,7 +114,7 @@ public class InmuebleController {
         var resultado = servicio.buscarInmueblesEnLugarEnRango(longitud, latitud, rango).stream()
                 .map(this::createInmuebleDireccionDTO).toList();
         log.info("Resultado:");
-        resultado.forEach(i -> log.debug("{}", i));
+        resultado.forEach(i -> log.info("{}", i));
         return resultado;
     }
 
@@ -138,7 +138,7 @@ public class InmuebleController {
         var resultado = servicio.filtrarInmuebles(minArea, maxArea, minPrecio, maxPrecio, latitud, longitud, radio, tipo)
                 .stream().map(this::createInmuebleDireccionDTO).toList();
         log.info("Resultado:");
-        resultado.forEach(i -> log.debug("{}", i));
+        resultado.forEach(i -> log.info("{}", i));
         return resultado;
     }
 
@@ -149,7 +149,7 @@ public class InmuebleController {
                 .stream()
                 .map(this::createInmuebleDireccionDTO).toList();
         log.info("Resultado:");
-        resultado.forEach(i -> log.debug("{}", i));
+        resultado.forEach(i -> log.info("{}", i));
         return resultado;
     }
 
@@ -169,10 +169,10 @@ public class InmuebleController {
         try {
             log.info("Estableciendo conexión con el API de Geoapify");
             dtoDir = new GeoapifyConnection(d).getDireccionDTOAsociada();
-            log.debug("Dirección recuperada: {}", dtoDir);
+            log.info("Dirección recuperada: {}", dtoDir);
             return dtoDir;
-        } catch (IOException e) {
-            log.error("La dirección no pudo ser recuperada, error en el API Geoapify");
+        } catch (Exception e) {
+            log.error("La dirección no pudo ser recuperada, info en el API Geoapify");
             throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
         }
     }
