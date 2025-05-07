@@ -16,4 +16,5 @@ public interface IInmuebleUsuarioService {
     InmuebleUsuario aprobarCompraInmueble(int idInmueble, int idUsuario);
     InmuebleUsuario rechazarCompraInmueble(int idInmueble, int idUsuario);
     InmuebleUsuario finalizarCompraInmueble(int idInmueble, int idUsuarioVendedor, int idUsuarioComprador);
+    List<InmuebleUsuario> listarEstadoSolicitadoPorIdUsuarioVendedor(int idUsuario);
 }

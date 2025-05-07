@@ -86,4 +86,9 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
         }
         return null;
     }
+
+    @Override
+    public List<InmuebleUsuario> listarEstadoSolicitadoPorIdUsuarioVendedor(int idUsuario) {
+        return repo.buscarPorEstadoSolicitadIdUsuarioVendedor(idUsuario);
+    }
 }

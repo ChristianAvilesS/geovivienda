@@ -174,4 +174,10 @@ public class InmuebleUsuarioController {
         }
         throw new RecursoNoEncontradoException("No se encontró la relación");
     }
+
+    @GetMapping("/listarSolicitados")
+    public List<InmuebleUsuarioDTO> listarEstadoSolicitadoPorIdUsuarioVendedor(@PathVariable int idUsuario) {
+        return servicio.listarEstadoSolicitadoPorIdUsuarioVendedor(idUsuario).stream()
+                .map(i-> modelM.map(i, InmuebleUsuarioDTO.class)).collect(Collectors.toList());
+    }
 }
