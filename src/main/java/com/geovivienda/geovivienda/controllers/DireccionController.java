@@ -39,7 +39,7 @@ public class DireccionController {
         DireccionDTO dto = null;
         try {
             dto = new GeoapifyConnection(d).getDireccionDTOAsociada();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
         }
 
@@ -55,7 +55,7 @@ public class DireccionController {
             direccion.setDireccion(dto.getDireccion());
             direccion.setLatitud(dto.getLatitud());
             direccion.setLongitud(dto.getLongitud());
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
         }
 

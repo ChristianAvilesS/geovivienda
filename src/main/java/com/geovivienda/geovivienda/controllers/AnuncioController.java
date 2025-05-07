@@ -41,7 +41,7 @@ public class AnuncioController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public AnuncioDTO agregarAnuncio(@RequestBody AnuncioDTO dto) {
         var anuncio = modelM.map(dto, Anuncio.class);
         anuncio.setAnunciante(userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario()));
@@ -69,7 +69,7 @@ public class AnuncioController {
     }
 
     @GetMapping("/cantidad")
-    @PreAuthorize("hasAnyRole('VENDEDOR', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public List<CantidadAnunciosXUsuarioDTO> obtenerCantidadAnunciosXUsuario() {
         List<CantidadAnunciosXUsuarioDTO> dtoLista = new ArrayList<>();
         List<String[]> filaLista = servicio.cantidadAnunciosXUsuario();
@@ -82,7 +82,6 @@ public class AnuncioController {
         return dtoLista;
 
     }
-
 
 
 }

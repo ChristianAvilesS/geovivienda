@@ -38,7 +38,7 @@ public class VisitaController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('COMPRADOR', 'ARRENDATARIO')")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
     public VisitaDTO agregarVisita(@RequestBody VisitaDTO dto) {
         var visita = modelM.map(dto, Visita.class);
         visita.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
