@@ -20,8 +20,7 @@ import java.net.URL;
 @Getter
 @Setter
 public class GeoapifyConnection {
-    @Value("${geovivienda.api.key}")
-    private String API_KEY;
+    private static final String API_KEY = "a638798ea1c142ef85837a2036970f91";
     private static final String SEARCH_PARAMS = "&lang=es&limit=1&type=street&format=json";
     private static final String URL = "https://api.geoapify.com/v1/geocode/search?";
     private String address;
@@ -34,7 +33,7 @@ public class GeoapifyConnection {
         this.address = address;
     }
 
-    private JSONObject geolocateAddress() throws IOException {
+    private JSONObject geolocateAddress() throws Exception {
         var urlQuery = URL + "text=" + address.replaceAll(" ", "%20") + SEARCH_PARAMS + "&apiKey=" + API_KEY;
         URL url = new URL(urlQuery);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -56,7 +55,7 @@ public class GeoapifyConnection {
         return null;
     }
 
-    public DireccionDTO getDireccionDTOAsociada() throws IOException {
+    public DireccionDTO getDireccionDTOAsociada() throws Exception {
         JSONObject result = this.geolocateAddress();
         String formattedAddress = result.get("formatted").toString();
         BigDecimal latitud = new BigDecimal(result.get("lat").toString());

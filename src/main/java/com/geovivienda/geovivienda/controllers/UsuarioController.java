@@ -46,13 +46,13 @@ public class UsuarioController {
         Usuario usuario = modelM.map(dto, Usuario.class);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setInactivo(false);
-        if (usuario.getDireccion().getIdDireccion() != 0) {
+        if (usuario.getDireccion().getIdDireccion() != null && usuario.getDireccion().getIdDireccion() != 0) {
             usuario.setDireccion(dirService.buscarDireccionPorId(usuario.getDireccion().getIdDireccion()));
         } else {
             DireccionDTO dtoDir = null;
             try {
                 dtoDir = new GeoapifyConnection(dto.getDireccion().getDireccion()).getDireccionDTOAsociada();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
             }
 
