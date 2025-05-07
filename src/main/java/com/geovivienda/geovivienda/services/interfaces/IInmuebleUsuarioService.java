@@ -12,4 +12,9 @@ public interface IInmuebleUsuarioService {
     InmuebleUsuario guardarInmuebleUsuario(InmuebleUsuario usuario);
     void eliminarInmuebleUsuario(InmuebleUsuario usuario);
     InmuebleUsuario marcarDesmarcarFavorito(int idInmueble, int idUsuario);
+    InmuebleUsuario solicitarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario aprobarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario rechazarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario finalizarCompraInmueble(int idInmueble, int idUsuarioVendedor, int idUsuarioComprador);
+    List<InmuebleUsuario> listarEstadoSolicitadoPorIdUsuarioVendedor(int idUsuario);
 }
