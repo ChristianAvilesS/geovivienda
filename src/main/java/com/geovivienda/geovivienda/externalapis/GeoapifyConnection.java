@@ -3,7 +3,10 @@ package com.geovivienda.geovivienda.externalapis;
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
 import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
@@ -14,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Getter
+@Setter
 public class GeoapifyConnection {
     private static final String API_KEY = "a638798ea1c142ef85837a2036970f91";
     private static final String SEARCH_PARAMS = "&lang=es&limit=1&type=street&format=json";
@@ -28,15 +33,7 @@ public class GeoapifyConnection {
         this.address = address;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    private JSONObject geolocateAddress() throws IOException {
+    private JSONObject geolocateAddress() throws Exception {
         var urlQuery = URL + "text=" + address.replaceAll(" ", "%20") + SEARCH_PARAMS + "&apiKey=" + API_KEY;
         URL url = new URL(urlQuery);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -58,7 +55,7 @@ public class GeoapifyConnection {
         return null;
     }
 
-    public DireccionDTO getDireccionDTOAsociada() throws IOException {
+    public DireccionDTO getDireccionDTOAsociada() throws Exception {
         JSONObject result = this.geolocateAddress();
         String formattedAddress = result.get("formatted").toString();
         BigDecimal latitud = new BigDecimal(result.get("lat").toString());

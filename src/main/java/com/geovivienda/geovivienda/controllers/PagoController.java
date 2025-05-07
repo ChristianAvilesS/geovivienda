@@ -41,7 +41,7 @@ public class PagoController {
     }
 
     @GetMapping("/pagoscercanos")
-    @PreAuthorize("hasAnyRole('COMPRADOR', 'ARRENDATARIO')")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
     public List<PagosCercanosDTO> obtenerPagosCercanos() {
         List<PagosCercanosDTO> dtoLista = new ArrayList<>();
             List<Object[]> filaLista=servicio.paymentsByDate();

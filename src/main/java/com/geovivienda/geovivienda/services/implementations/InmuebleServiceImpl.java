@@ -2,6 +2,7 @@ package com.geovivienda.geovivienda.services.implementations;
 
 import com.geovivienda.geovivienda.entities.Inmueble;
 import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
+import com.geovivienda.geovivienda.repositories.IInmuebleUsuarioRepository;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,9 @@ public class InmuebleServiceImpl implements IInmuebleService {
 
     @Autowired
     private IInmuebleRepository repos;
+
+    @Autowired
+    private IInmuebleUsuarioRepository inmuebleUsuarioRepos;
 
     @Override
     public List<Inmueble> listarInmuebles() {
@@ -32,7 +36,8 @@ public class InmuebleServiceImpl implements IInmuebleService {
 
     @Override
     public void eliminarInmueble(Inmueble inmueble) {
-        repos.delete(inmueble);
+        repos.deleteLogically(inmueble.getIdInmueble());
+        inmuebleUsuarioRepos.deleteInmueblesUsuarioByInmueble(inmueble.getIdInmueble());
     }
 
     @Override
