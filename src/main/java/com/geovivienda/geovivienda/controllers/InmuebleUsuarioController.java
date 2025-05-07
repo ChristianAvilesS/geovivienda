@@ -1,5 +1,7 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.AprobarCompraInmuebleDTO;
+import com.geovivienda.geovivienda.dtos.FinalizarCompraInmuebleDTO;
 import com.geovivienda.geovivienda.dtos.InmuebleUsuarioDTO;
 import com.geovivienda.geovivienda.entities.Contrato;
 import com.geovivienda.geovivienda.entities.InmuebleUsuario;
@@ -98,35 +100,29 @@ public class InmuebleUsuarioController {
     }
 
     @PutMapping("/aprobarcomprainmueble")
-    public ResponseEntity<InmuebleUsuarioDTO> aprobarCompraInmueble(@RequestParam int idInmueble,
-                                                                    @RequestParam int idUsuarioComprador,
-                                                                    @RequestParam int idUsuarioVendedor,
-                                                                    @RequestParam String descripcionContrato,
-                                                                    @RequestParam String tipoContrato,
-                                                                    @RequestParam LocalDate fechaVencimientoContrato) {
-        var inmuebleUsuario = servicio.aprobarCompraInmueble(idInmueble, idUsuarioComprador);
-        BigDecimal precioBaseInmueble = inmuebleService.buscarInmueblePorId(idInmueble).getPrecioBase();
+    public ResponseEntity<InmuebleUsuarioDTO> aprobarCompraInmueble(@RequestBody AprobarCompraInmuebleDTO dto) {
+        var inmuebleUsuario = servicio.aprobarCompraInmueble(dto.getIdInmueble(), dto.getIdUsuarioComprador());
+        BigDecimal precioBaseInmueble = inmuebleService.buscarInmueblePorId(dto.getIdInmueble()).getPrecioBase();
 
         ZoneId zona = ZoneId.systemDefault(); // o ZoneId.of("America/Lima")
 
         if(inmuebleUsuario != null){
             var contrato = new Contrato();
 
-            contrato.setDescripcion(descripcionContrato);
-            contrato.setTipoContrato(tipoContrato);
+            contrato.setDescripcion(dto.getDescripcionContrato());
+            contrato.setTipoContrato(dto.getTipoContrato());
             contrato.setMontoTotal(precioBaseInmueble);
             contrato.setFechaFirma(Instant.now());
-            contrato.setFechaVencimiento(fechaVencimientoContrato.atStartOfDay(zona).toInstant());
-            contrato.setInmueble(inmuebleService.buscarInmueblePorId(idInmueble));
-            contrato.setVendedor(usuarioService.buscarUsuarioPorId(idUsuarioVendedor));
-            contrato.setComprador(usuarioService.buscarUsuarioPorId(idUsuarioComprador));
+            contrato.setFechaVencimiento(dto.getFechaVencimientoContrato().atStartOfDay(zona).toInstant());
+            contrato.setInmueble(inmuebleService.buscarInmueblePorId(dto.getIdInmueble()));
+            contrato.setVendedor(usuarioService.buscarUsuarioPorId(dto.getIdUsuarioVendedor()));
+            contrato.setComprador(usuarioService.buscarUsuarioPorId(dto.getIdUsuarioComprador()));
 
             contratoService.guardarContrato(contrato);
 
             return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
         }
-        throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
-                " - idUsuario: " + idUsuarioComprador);
+        throw new RecursoNoEncontradoException("No se encontró la relación");
     }
 
     @PutMapping("/rechazarcomprainmueble")
@@ -141,14 +137,9 @@ public class InmuebleUsuarioController {
     }
 
     @PutMapping("/finalizarcomprainmueble")
-    public ResponseEntity<InmuebleUsuarioDTO> finalizarCompraInmueble(@RequestParam int idContrato,
-                                                                        @RequestParam int idMedioPago,
-                                                                        @RequestParam String descripcionPago,
-                                                                        @RequestParam String tipoMoneda,
-                                                                        @RequestParam BigDecimal importe,
-                                                                        @RequestParam LocalDate fechaVencimientoPago) {
-        var contrato = contratoService.buscarContratoPorId(idContrato);
-        var medioPago = medioPagoService.buscarMedioPagoPorId(idMedioPago);
+    public ResponseEntity<InmuebleUsuarioDTO> finalizarCompraInmueble(@RequestBody FinalizarCompraInmuebleDTO dto) {
+        var contrato = contratoService.buscarContratoPorId(dto.getIdContrato());
+        var medioPago = medioPagoService.buscarMedioPagoPorId(dto.getIdMedioPago());
 
         ZoneId zona = ZoneId.systemDefault(); // o ZoneId.of("America/Lima")
 
@@ -161,11 +152,11 @@ public class InmuebleUsuarioController {
             var pago = new Pago();
 
             pago.setContrato(contrato);
-            pago.setDescripcion(descripcionPago);
-            pago.setTipoMoneda(tipoMoneda);
+            pago.setDescripcion(dto.getDescripcionPago());
+            pago.setTipoMoneda(dto.getTipoMoneda());
             pago.setFechaPago(Instant.now());
-            pago.setImporte(importe);
-            pago.setFechaVencimiento(fechaVencimientoPago.atStartOfDay(zona).toInstant());
+            pago.setImporte(dto.getImporte());
+            pago.setFechaVencimiento(dto.getFechaVencimientoPago().atStartOfDay(zona).toInstant());
             pago.setMedio(medioPago);
 
             pagoService.guardarPago(pago);
