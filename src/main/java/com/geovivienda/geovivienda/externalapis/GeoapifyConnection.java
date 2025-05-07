@@ -3,7 +3,10 @@ package com.geovivienda.geovivienda.externalapis;
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
 import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import lombok.Getter;
+import lombok.Setter;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
@@ -14,8 +17,11 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+@Getter
+@Setter
 public class GeoapifyConnection {
-    private static final String API_KEY = "a638798ea1c142ef85837a2036970f91";
+    @Value("${geovivienda.api.key}")
+    private String API_KEY;
     private static final String SEARCH_PARAMS = "&lang=es&limit=1&type=street&format=json";
     private static final String URL = "https://api.geoapify.com/v1/geocode/search?";
     private String address;
@@ -25,14 +31,6 @@ public class GeoapifyConnection {
     }
 
     public GeoapifyConnection(String address) {
-        this.address = address;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
         this.address = address;
     }
 

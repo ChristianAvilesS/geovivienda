@@ -37,7 +37,7 @@ public class ImagenController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('VENDEDOR')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ImagenDTO agregarImagen(@RequestBody ImagenDTO dto) {
         Imagen imagen = modelM.map(dto, Imagen.class);
         imagen.setInmueble(inService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
@@ -55,7 +55,7 @@ public class ImagenController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('VENDEDOR', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarImagen(@PathVariable int id) {
         var imagen = servicio.buscarImagenPorId(id);
         servicio.eliminarImagen(imagen);

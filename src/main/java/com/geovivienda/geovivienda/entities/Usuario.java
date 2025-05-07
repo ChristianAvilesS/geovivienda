@@ -1,5 +1,6 @@
 package com.geovivienda.geovivienda.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -23,9 +24,11 @@ public class Usuario {
     @Column(name = "nombre", length = 200)
     private String nombre;
 
+    @JsonIgnore
     @Column(name = "telefono", length = 20)
     private String telefono;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "id_direccion", nullable = false)
     private Direccion direccion;
@@ -36,9 +39,11 @@ public class Usuario {
     @Column(name = "email", length = 20)
     private String email;
 
+    @JsonIgnore
     @Column(name = "password", length = 128)
     private String password;
 
+    @JsonIgnore
     @Column(name = "inactivo", nullable = false)
     private Boolean inactivo = false;
 

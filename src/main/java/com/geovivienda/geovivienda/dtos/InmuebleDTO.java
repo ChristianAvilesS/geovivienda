@@ -4,6 +4,7 @@ import com.geovivienda.geovivienda.entities.Direccion;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
@@ -26,4 +27,18 @@ public class InmuebleDTO {
     private String descripcion;
 
     private String estado;
+
+    @Override
+    public String toString() {
+        return "InmuebleDTO{" +
+                "id=" + id +
+                ", nombre='" + nombre + '\'' +
+                ", tipo='" + tipo + '\'' +
+                ", direccion=" + direccion +
+                ", area=" + area +
+                ", precioBase=" + precioBase +
+                ", descripcion='" + descripcion + '\'' +
+                ", estado='" + estado + '\'' +
+                '}';
+    }
 }
