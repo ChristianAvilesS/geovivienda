@@ -73,4 +73,17 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
         }
         return null;
     }
+
+    @Override
+    public InmuebleUsuario finalizarCompraInmueble(int idInmueble, int idUsuarioVendedor, int idUsuarioComprador) {
+        InmuebleUsuario inmuebleUsuarioVendedor = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuarioVendedor);
+        InmuebleUsuario inmuebleUsuarioComprador = repo.buscarPorIdInmuebleIdUsuario(idInmueble, idUsuarioComprador);
+        if(inmuebleUsuarioComprador.getEstadoSolicitud().equals("APROBADO")) {
+            inmuebleUsuarioComprador.setEstadoSolicitud("COMPRADO");
+            inmuebleUsuarioComprador.setEsDuenio(true);
+            inmuebleUsuarioVendedor.setEsDuenio(false);
+            return repo.save(inmuebleUsuarioComprador);
+        }
+        return null;
+    }
 }

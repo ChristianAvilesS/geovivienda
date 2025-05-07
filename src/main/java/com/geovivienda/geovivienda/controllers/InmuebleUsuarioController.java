@@ -3,6 +3,7 @@ package com.geovivienda.geovivienda.controllers;
 import com.geovivienda.geovivienda.dtos.InmuebleUsuarioDTO;
 import com.geovivienda.geovivienda.entities.Contrato;
 import com.geovivienda.geovivienda.entities.InmuebleUsuario;
+import com.geovivienda.geovivienda.entities.Pago;
 import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +41,9 @@ public class InmuebleUsuarioController {
 
     @Autowired
     private IContratoService contratoService;
+
+    @Autowired
+    private IMedioPagoService medioPagoService;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -102,20 +107,22 @@ public class InmuebleUsuarioController {
         var inmuebleUsuario = servicio.aprobarCompraInmueble(idInmueble, idUsuarioComprador);
         BigDecimal precioBaseInmueble = inmuebleService.buscarInmueblePorId(idInmueble).getPrecioBase();
 
+        ZoneId zona = ZoneId.systemDefault(); // o ZoneId.of("America/Lima")
+
         if(inmuebleUsuario != null){
             var contrato = new Contrato();
 
             contrato.setDescripcion(descripcionContrato);
             contrato.setTipoContrato(tipoContrato);
             contrato.setMontoTotal(precioBaseInmueble);
-            contrato.setFechaFirma(Instant.from(LocalDate.now()));
-            contrato.setFechaVencimiento(Instant.from(fechaVencimientoContrato));
+            contrato.setFechaFirma(Instant.now());
+            contrato.setFechaVencimiento(fechaVencimientoContrato.atStartOfDay(zona).toInstant());
             contrato.setInmueble(inmuebleService.buscarInmueblePorId(idInmueble));
             contrato.setVendedor(usuarioService.buscarUsuarioPorId(idUsuarioVendedor));
             contrato.setComprador(usuarioService.buscarUsuarioPorId(idUsuarioComprador));
 
             contratoService.guardarContrato(contrato);
-            
+
             return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
         }
         throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
@@ -131,5 +138,40 @@ public class InmuebleUsuarioController {
         }
         throw new RecursoNoEncontradoException("No se encontró la relación con idInmueble: " + idInmueble +
                 " - idUsuario: " + idUsuario);
+    }
+
+    @PutMapping("/finalizarcomprainmueble")
+    public ResponseEntity<InmuebleUsuarioDTO> finalizarCompraInmueble(@RequestParam int idContrato,
+                                                                        @RequestParam int idMedioPago,
+                                                                        @RequestParam String descripcionPago,
+                                                                        @RequestParam String tipoMoneda,
+                                                                        @RequestParam BigDecimal importe,
+                                                                        @RequestParam LocalDate fechaVencimientoPago) {
+        var contrato = contratoService.buscarContratoPorId(idContrato);
+        var medioPago = medioPagoService.buscarMedioPagoPorId(idMedioPago);
+
+        ZoneId zona = ZoneId.systemDefault(); // o ZoneId.of("America/Lima")
+
+
+        var inmuebleUsuario = servicio.finalizarCompraInmueble(contrato.getInmueble().getIdInmueble(),
+                                                                contrato.getVendedor().getIdUsuario(),
+                                                                contrato.getComprador().getIdUsuario());
+
+        if(inmuebleUsuario != null){
+            var pago = new Pago();
+
+            pago.setContrato(contrato);
+            pago.setDescripcion(descripcionPago);
+            pago.setTipoMoneda(tipoMoneda);
+            pago.setFechaPago(Instant.now());
+            pago.setImporte(importe);
+            pago.setFechaVencimiento(fechaVencimientoPago.atStartOfDay(zona).toInstant());
+            pago.setMedio(medioPago);
+
+            pagoService.guardarPago(pago);
+
+            return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
+        }
+        throw new RecursoNoEncontradoException("No se encontró la relación");
     }
 }
