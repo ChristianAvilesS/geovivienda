@@ -1,17 +1,22 @@
 package com.geovivienda.geovivienda.controllers;
 
-import com.geovivienda.geovivienda.dtos.UsuarioLoginDTO;
+import com.geovivienda.geovivienda.dtos.DireccionDTO;
+import com.geovivienda.geovivienda.entities.Direccion;
+import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
-import com.geovivienda.geovivienda.exceptions.UsuarioInactivoException;
+import com.geovivienda.geovivienda.externalapis.GeoapifyConnection;
+import com.geovivienda.geovivienda.services.interfaces.IDireccionService;
 import org.modelmapper.ModelMapper;
 import com.geovivienda.geovivienda.dtos.UsuarioDTO;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,15 +28,37 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService servicio;
 
+    @Autowired
+    private IDireccionService dirService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<UsuarioDTO> obtenerUsuarios() {
         return servicio.listarUsuarios().stream()
                 .map(p -> modelM.map(p, UsuarioDTO.class)).collect(Collectors.toList());
     }
 
-    @PostMapping
+    @PostMapping // Cualquiera puede, sin autenticar
     public UsuarioDTO agregarUsuario(@RequestBody UsuarioDTO dto) {
-        return modelM.map(this.servicio.guardarUsuario(modelM.map(dto, Usuario.class)), UsuarioDTO.class);
+        Usuario usuario = modelM.map(dto, Usuario.class);
+        usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
+        usuario.setInactivo(false);
+        if (usuario.getDireccion().getIdDireccion() != null && usuario.getDireccion().getIdDireccion() != 0) {
+            usuario.setDireccion(dirService.buscarDireccionPorId(usuario.getDireccion().getIdDireccion()));
+        } else {
+            DireccionDTO dtoDir = null;
+            try {
+                dtoDir = new GeoapifyConnection(dto.getDireccion().getDireccion()).getDireccionDTOAsociada();
+            } catch (Exception e) {
+                throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
+            }
+
+            usuario.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
+        }
+        return modelM.map(servicio.guardarUsuario(usuario), UsuarioDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -48,7 +75,7 @@ public class UsuarioController {
         Usuario usuario = this.servicio.buscarUsuarioPorId(id);
         usuario.setNombre(usuarioRecibido.getNombre());
         usuario.setTelefono(usuarioRecibido.getTelefono());
-        usuario.setDireccion(usuarioRecibido.getDireccion());
+        usuario.setDireccion(dirService.buscarDireccionPorId(usuarioRecibido.getDireccion().getIdDireccion()));
         usuario.setEmail(usuarioRecibido.getEmail());
 
         this.servicio.guardarUsuario(usuario);
@@ -61,21 +88,7 @@ public class UsuarioController {
         if (usuario == null) {
             throw new RecursoNoEncontradoException("No se encontró el id: " + id);
         }
-        servicio.eliminarUsuario(usuario);
-        return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
-    }
-
-    @GetMapping("/verificar")
-    public ResponseEntity<UsuarioDTO> verificarUsuario(@RequestBody UsuarioLoginDTO dto) {
-        Usuario usuario = servicio.verificarLogin(modelM.map(dto, Usuario.class));
-        if (usuario != null) {
-            if (usuario.getInactivo()) {
-                throw new UsuarioInactivoException("El usuario ha sido eliminado");
-            }
-            return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
-
-        }
-        throw new RecursoNoEncontradoException("El usuario o contraseña es incorrecto");
+        return ResponseEntity.ok(modelM.map(servicio.eliminarUsuario(usuario), UsuarioDTO.class));
     }
 
 

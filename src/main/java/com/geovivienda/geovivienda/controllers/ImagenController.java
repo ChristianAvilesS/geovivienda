@@ -1,14 +1,15 @@
 package com.geovivienda.geovivienda.controllers;
 
-import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
 import com.geovivienda.geovivienda.dtos.CantidadImagenesXInmuebleDTO;
 import com.geovivienda.geovivienda.dtos.ImagenDTO;
 import com.geovivienda.geovivienda.entities.Imagen;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IImagenService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -25,15 +26,23 @@ public class ImagenController {
     @Autowired
     private IImagenService servicio;
 
+    @Autowired
+    private IInmuebleService inService;
+
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ImagenDTO> obtenerImagenes() {
         return servicio.listarImagenes().stream()
                 .map(p -> modelM.map(p, ImagenDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ImagenDTO agregarImagen(@RequestBody ImagenDTO dto) {
-        return modelM.map(this.servicio.guardarImagen(modelM.map(dto, Imagen.class)), ImagenDTO.class);
+        Imagen imagen = modelM.map(dto, Imagen.class);
+        imagen.setInmueble(inService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+
+        return modelM.map(this.servicio.guardarImagen(imagen), ImagenDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -46,6 +55,7 @@ public class ImagenController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarImagen(@PathVariable int id) {
         var imagen = servicio.buscarImagenPorId(id);
         servicio.eliminarImagen(imagen);

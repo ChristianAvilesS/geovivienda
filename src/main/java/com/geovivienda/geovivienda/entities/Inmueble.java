@@ -1,5 +1,6 @@
 package com.geovivienda.geovivienda.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Table(name = "inmuebles")
 public class Inmueble {
     @Id
@@ -23,7 +25,7 @@ public class Inmueble {
     @Column(name = "tipo", length = 100)
     private String tipo;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_direccion", nullable = false)
     private Direccion direccion;
 

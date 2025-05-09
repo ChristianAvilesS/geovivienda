@@ -7,9 +7,14 @@ import java.util.List;
 
 public interface IInmuebleUsuarioService {
 
-    public List<InmuebleUsuario> listarInmuebleUsuarios();
-    public InmuebleUsuario buscarInmuebleUsuarioPorId(InmuebleUsuarioId id);
-
-    public InmuebleUsuario guardarInmuebleUsuario(InmuebleUsuario usuario);
-    public void eliminarInmuebleUsuario(InmuebleUsuario usuario);
+    List<InmuebleUsuario> listarInmuebleUsuarios();
+    InmuebleUsuario buscarInmuebleUsuarioPorId(InmuebleUsuarioId id);
+    InmuebleUsuario guardarInmuebleUsuario(InmuebleUsuario usuario);
+    void eliminarInmuebleUsuario(InmuebleUsuario usuario);
+    InmuebleUsuario marcarDesmarcarFavorito(int idInmueble, int idUsuario);
+    InmuebleUsuario solicitarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario aprobarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario rechazarCompraInmueble(int idInmueble, int idUsuario);
+    InmuebleUsuario finalizarCompraInmueble(int idInmueble, int idUsuarioVendedor, int idUsuarioComprador);
+    List<InmuebleUsuario> listarEstadoSolicitadoPorIdUsuarioVendedor(int idUsuario);
 }

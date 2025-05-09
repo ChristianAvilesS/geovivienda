@@ -39,4 +39,9 @@ public class RolUsuarioServiceImpl implements IRolUsuarioService {
     public List<RolUsuario> buscarRolesPorUsuario(int idUsuario) {
         return repos.buscarRolesPorUsuario(idUsuario);
     }
+
+    @Override
+    public List<String[]> findPredominantUserRol(int idUsuario) {
+        return repos.findPredominantUserRol(idUsuario);
+    }
 }
