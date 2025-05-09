@@ -5,6 +5,7 @@ import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
 import com.geovivienda.geovivienda.repositories.IInmuebleUsuarioRepository;
 import com.geovivienda.geovivienda.repositories.IUsuarioRepository;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +39,19 @@ public class UsuarioServiceImpl implements IUsuarioService {
     }
 
     @Override
+    @Transactional
     public Usuario eliminarUsuario(Usuario usuario) {
         //No se usa esto porque "eliminar" está como atributo en inactivo: repos.delete(usuario);
         usuario.setInactivo(true);
 
         for (var iu : inmuebleUsuarioRepos.findInmueblesByUser(usuario.getIdUsuario())) {
-            inmuebleRepos.deleteLogically(iu.getInmueble().getIdInmueble());
-            inmuebleUsuarioRepos.deleteInmueblesUsuarioByInmueble(iu.getInmueble().getIdInmueble());
+            if (iu.getEsDuenio()) {
+                inmuebleRepos.deleteLogically(iu.getInmueble().getIdInmueble());
+                inmuebleUsuarioRepos.deleteInmueblesUsuarioByInmueble(iu.getInmueble().getIdInmueble());
+            }
         }
 
+        inmuebleUsuarioRepos.deleteInmueblesUsuarioByUser(usuario.getIdUsuario());
         return guardarUsuario(usuario);
     }
 }
