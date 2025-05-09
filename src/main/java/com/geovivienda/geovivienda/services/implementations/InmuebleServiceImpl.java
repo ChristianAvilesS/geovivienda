@@ -4,6 +4,7 @@ import com.geovivienda.geovivienda.entities.Inmueble;
 import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
 import com.geovivienda.geovivienda.repositories.IInmuebleUsuarioRepository;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,7 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
+    @Transactional
     public void eliminarInmueble(Inmueble inmueble) {
         repos.deleteLogically(inmueble.getIdInmueble());
         inmuebleUsuarioRepos.deleteInmueblesUsuarioByInmueble(inmueble.getIdInmueble());
