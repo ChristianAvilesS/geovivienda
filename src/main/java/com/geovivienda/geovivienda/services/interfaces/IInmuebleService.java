@@ -11,6 +11,7 @@ public interface IInmuebleService {
     List<Inmueble> listarInmuebles();
     Inmueble buscarInmueblePorId(Integer id);
     Inmueble guardarInmueble(Inmueble inmueble);
+    Inmueble editarInmueble(Inmueble inmueble);
     void eliminarInmueble(Inmueble inmueble);
     List<Inmueble> buscarInmueblesEnLugarEnRango(BigDecimal lon, BigDecimal lat, BigDecimal rango);
     List<Inmueble> filtrarInmuebles(BigDecimal minArea, BigDecimal maxArea,
