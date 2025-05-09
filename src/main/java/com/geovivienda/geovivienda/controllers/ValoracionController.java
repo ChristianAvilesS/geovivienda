@@ -1,15 +1,18 @@
 package com.geovivienda.geovivienda.controllers;
 
 
-import com.geovivienda.geovivienda.dtos.ValoracionDTO;
+import com.geovivienda.geovivienda.dtos.*;
 import com.geovivienda.geovivienda.entities.Valoracion;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IValoracionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,12 +27,14 @@ public class ValoracionController {
     private IValoracionService servicio;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ValoracionDTO> listarValoraciones() {
         return servicio.listarValoraciones().stream()
                 .map(v -> modelM.map(v, ValoracionDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('COMPRADOR')")
     public ValoracionDTO agregarValoracion(@RequestBody ValoracionDTO dto){
         return modelM.map(servicio.guardarValoracion(modelM.map(dto, Valoracion.class)), ValoracionDTO.class);
     }
@@ -44,6 +49,7 @@ public class ValoracionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
     public ResponseEntity<Map<String,Boolean>> eliminarContrato(@PathVariable int id) {
         var contrato = servicio.buscarValoracionPorId(id);
         servicio.eliminarValoracion(contrato);
@@ -51,4 +57,36 @@ public class ValoracionController {
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/cantidadXInmueble")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
+    public List<ValoracionXInmuebleDTO> obtenerCantidadXInmueble() {
+        List<ValoracionXInmuebleDTO> dtoLista = new ArrayList<>();
+        List<String[]> filaLista = servicio.cantidadValoracionesXInmueble();
+        for (String[] columna : filaLista) {
+            ValoracionXInmuebleDTO dto = new ValoracionXInmuebleDTO();
+            dto.setNombreInmueble(columna[0]);
+            dto.setRating(Long.parseLong(columna[1]));
+            dtoLista.add(dto);
+        }
+        return dtoLista;
+
+    }
+
+
+    @GetMapping("/valoracioninmueble")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
+    public List<ValoracionInmuebleDTO> obtenerValoracion() {
+        List<ValoracionInmuebleDTO> dtoLista = new ArrayList<>();
+        List<String[]> filaLista = servicio.valoracionInmueble();
+        for (String[] columna : filaLista) {
+            ValoracionInmuebleDTO dto = new ValoracionInmuebleDTO();
+            dto.setNombreInmueble(columna[0]);
+            dto.setValoracion(new BigDecimal(columna[1]));
+            dtoLista.add(dto);
+        }
+        return dtoLista;
+
+    }
+
 }

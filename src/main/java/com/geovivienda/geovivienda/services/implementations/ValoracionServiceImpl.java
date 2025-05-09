@@ -33,4 +33,16 @@ public class ValoracionServiceImpl implements IValoracionService {
     public void eliminarValoracion(Valoracion valoracion) {
         repos.delete(valoracion);
     }
+
+    @Override
+    public List<String[]> cantidadValoracionesXInmueble() {
+        return repos.cantidadValoracionesXInmueble();
+    }
+
+
+
+    @Override
+    public List<String[]> valoracionInmueble() {
+        return repos.valoracionInmueble();
+    }
 }

@@ -10,4 +10,7 @@ public interface IValoracionService {
 
      Valoracion guardarValoracion(Valoracion valoracion);
      void eliminarValoracion(Valoracion valoracion);
+
+     List<String[]> cantidadValoracionesXInmueble();
+     List<String[]> valoracionInmueble();
 }
