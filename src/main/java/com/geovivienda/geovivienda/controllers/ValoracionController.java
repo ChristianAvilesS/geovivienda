@@ -34,7 +34,7 @@ public class ValoracionController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('COMPRADOR')")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public ValoracionDTO agregarValoracion(@RequestBody ValoracionDTO dto){
         return modelM.map(servicio.guardarValoracion(modelM.map(dto, Valoracion.class)), ValoracionDTO.class);
     }
@@ -49,8 +49,8 @@ public class ValoracionController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
-    public ResponseEntity<Map<String,Boolean>> eliminarContrato(@PathVariable int id) {
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> eliminarValoracion(@PathVariable int id) {
         var contrato = servicio.buscarValoracionPorId(id);
         servicio.eliminarValoracion(contrato);
         Map<String, Boolean> respuesta = new HashMap<>();

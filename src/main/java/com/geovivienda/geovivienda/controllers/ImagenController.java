@@ -70,7 +70,7 @@ public class ImagenController {
         List<String[]> filaLista = servicio.cantidadImagenesXInmueble();
         for (String[] columna : filaLista) {
             CantidadImagenesXInmuebleDTO dto = new CantidadImagenesXInmuebleDTO();
-            dto.setNombreInmueble(columna[0]);
+            dto.setNombreInmueble(columna[1]);
             dto.setCantidadImagenes(Integer.parseInt(columna[2]));
             dtoLista.add(dto);
         }
