@@ -30,6 +30,11 @@ public class ContratoServiceImpl implements IContratoService {
     }
 
     @Override
+    public Contrato editarContrato(Contrato contrato) {
+        return repos.save(contrato);
+    }
+
+    @Override
     public void eliminarContrato(Contrato contrato) {
         repos.delete(contrato);
     }

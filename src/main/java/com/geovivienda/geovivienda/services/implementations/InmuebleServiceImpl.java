@@ -35,6 +35,11 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
+    public Inmueble editarInmueble(Inmueble inmueble) {
+        return repos.save(inmueble);
+    }
+
+    @Override
     public void eliminarInmueble(Inmueble inmueble) {
         repos.deleteLogically(inmueble.getIdInmueble());
         inmuebleUsuarioRepos.deleteInmueblesUsuarioByInmueble(inmueble.getIdInmueble());
