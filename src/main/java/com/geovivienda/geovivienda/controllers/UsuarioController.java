@@ -1,6 +1,7 @@
 package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
+import com.geovivienda.geovivienda.dtos.UsuarioDevueltoDTO;
 import com.geovivienda.geovivienda.entities.Direccion;
 import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
@@ -16,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +36,13 @@ public class UsuarioController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public List<UsuarioDTO> obtenerUsuarios() {
+    public List<UsuarioDevueltoDTO> obtenerUsuarios() {
         return servicio.listarUsuarios().stream()
-                .map(p -> modelM.map(p, UsuarioDTO.class)).collect(Collectors.toList());
+                .map(p -> modelM.map(p, UsuarioDevueltoDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping // Cualquiera puede, sin autenticar
-    public UsuarioDTO agregarUsuario(@RequestBody UsuarioDTO dto) {
+    public UsuarioDevueltoDTO agregarUsuario(@RequestBody UsuarioDTO dto) {
         Usuario usuario = modelM.map(dto, Usuario.class);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setInactivo(false);
@@ -58,20 +58,21 @@ public class UsuarioController {
 
             usuario.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
         }
-        return modelM.map(servicio.guardarUsuario(usuario), UsuarioDTO.class);
+        return modelM.map(servicio.guardarUsuario(usuario), UsuarioDevueltoDTO.class);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> obtenerUsuarioPorId(@PathVariable int id) {
+    public ResponseEntity<UsuarioDevueltoDTO> obtenerUsuarioPorId(@PathVariable int id) {
         Usuario usuario = servicio.buscarUsuarioPorId(id);
         if (usuario != null) {
-            return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
+            return ResponseEntity.ok(modelM.map(usuario, UsuarioDevueltoDTO.class));
         }
         throw new RecursoNoEncontradoException("No se encontró el id: " + id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> actualizarUsuario(@PathVariable int id, @RequestBody UsuarioDTO usuarioRecibido) {
+    public ResponseEntity<UsuarioDevueltoDTO> actualizarUsuario(@PathVariable int id,
+                                                                @RequestBody UsuarioDevueltoDTO usuarioRecibido) {
         Usuario usuario = this.servicio.buscarUsuarioPorId(id);
         usuario.setNombre(usuarioRecibido.getNombre());
         usuario.setTelefono(usuarioRecibido.getTelefono());
@@ -79,16 +80,16 @@ public class UsuarioController {
         usuario.setEmail(usuarioRecibido.getEmail());
 
         this.servicio.guardarUsuario(usuario);
-        return ResponseEntity.ok(modelM.map(usuario, UsuarioDTO.class));
+        return ResponseEntity.ok(modelM.map(usuario, UsuarioDevueltoDTO.class));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> eliminarUsuario(@PathVariable int id) {
+    public ResponseEntity<UsuarioDevueltoDTO> eliminarUsuario(@PathVariable int id) {
         var usuario = servicio.buscarUsuarioPorId(id);
         if (usuario == null) {
             throw new RecursoNoEncontradoException("No se encontró el id: " + id);
         }
-        return ResponseEntity.ok(modelM.map(servicio.eliminarUsuario(usuario), UsuarioDTO.class));
+        return ResponseEntity.ok(modelM.map(servicio.eliminarUsuario(usuario), UsuarioDevueltoDTO.class));
     }
 
 
