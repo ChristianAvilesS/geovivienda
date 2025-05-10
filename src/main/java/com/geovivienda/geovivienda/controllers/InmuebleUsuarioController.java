@@ -59,6 +59,10 @@ public class InmuebleUsuarioController {
         var iu = modelM.map(dto, InmuebleUsuario.class);
         iu.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
         iu.setUsuario(usuarioService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
+        iu.setEsFavorito(dto.getEsFavorito());
+        iu.setEsDuenio(dto.getEsDuenio());
+        iu.setEstadoSolicitud(dto.getEstadoSolicitud());
+        iu.setFechaSolicitud(dto.getFechaSolicitud());
         return modelM.map(servicio.guardarInmuebleUsuario(iu), InmuebleUsuarioDTO.class);
     }
 
