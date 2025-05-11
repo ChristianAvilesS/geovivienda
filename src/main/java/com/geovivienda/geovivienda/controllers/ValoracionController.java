@@ -4,6 +4,8 @@ package com.geovivienda.geovivienda.controllers;
 import com.geovivienda.geovivienda.dtos.*;
 import com.geovivienda.geovivienda.entities.Valoracion;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import com.geovivienda.geovivienda.services.interfaces.IValoracionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,12 @@ public class ValoracionController {
     @Autowired
     private IValoracionService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<ValoracionDTO> listarValoraciones() {
@@ -33,10 +41,14 @@ public class ValoracionController {
                 .map(v -> modelM.map(v, ValoracionDTO.class)).collect(Collectors.toList());
     }
 
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public ValoracionDTO agregarValoracion(@RequestBody ValoracionDTO dto){
-        return modelM.map(servicio.guardarValoracion(modelM.map(dto, Valoracion.class)), ValoracionDTO.class);
+        var valoracion = modelM.map(dto, Valoracion.class);
+        valoracion.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        valoracion.setUsuario(userService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
+        return modelM.map(this.servicio.guardarValoracion(valoracion), ValoracionDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -51,12 +63,16 @@ public class ValoracionController {
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public ResponseEntity<Map<String,Boolean>> eliminarValoracion(@PathVariable int id) {
-        var contrato = servicio.buscarValoracionPorId(id);
-        servicio.eliminarValoracion(contrato);
+        var valoracion = servicio.buscarValoracionPorId(id);
+        servicio.eliminarValoracion(valoracion);
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
     }
+
+
+
+
 
     @GetMapping("/cantidadXInmueble")
     @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
