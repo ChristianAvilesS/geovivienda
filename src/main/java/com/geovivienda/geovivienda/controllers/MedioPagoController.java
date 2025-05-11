@@ -47,7 +47,7 @@ public class MedioPagoController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Map<String, Boolean>> eliminarMedioPago(@PathVariable("id") int id){
+    public ResponseEntity<Map<String, Boolean>> eliminarMedioPago(@PathVariable int id){
         servicio.eliminarMedioPago(id);
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
