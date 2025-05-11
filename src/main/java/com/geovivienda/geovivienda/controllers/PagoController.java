@@ -1,20 +1,26 @@
 package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.ImportePorMonedaDTO;
+import com.geovivienda.geovivienda.dtos.MedioPagoDTO;
 import com.geovivienda.geovivienda.dtos.PagoDTO;
 import com.geovivienda.geovivienda.dtos.PagosCercanosDTO;
+import com.geovivienda.geovivienda.entities.Contrato;
+import com.geovivienda.geovivienda.entities.MedioPago;
 import com.geovivienda.geovivienda.entities.Pago;
 import com.geovivienda.geovivienda.services.interfaces.IContratoService;
 import com.geovivienda.geovivienda.services.interfaces.IPagoService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,6 +44,20 @@ public class PagoController {
         Pago p = modelM.map(dto, Pago.class);
         p.setContrato(contratoService.buscarContratoPorId(dto.getContrato().getIdContrato()));
         return modelM.map(servicio.guardarPago(p), PagoDTO.class); // Regresa el pago con el id generado
+    }
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<PagoDTO> actualizarPago(@PathVariable int id, @RequestBody PagoDTO dto){ // Modificar
+        Pago p = servicio.buscarPagoPorId(id);
+        p.setDescripcion(dto.getDescripcion());
+        p.setImporte(dto.getImporte());
+        p.setTipoMoneda(dto.getTipoMoneda());
+        p.setMedio(dto.getMedio());
+        p.setFechaPago(dto.getFechaPago());
+        p.setFechaVencimiento(dto.getFechaVencimiento());
+        p.setContrato(dto.getContrato());
+        servicio.guardarPago(p);
+        return ResponseEntity.ok(modelM.map(p, PagoDTO.class));
     }
 
     @GetMapping("/pagoscercanos")
@@ -71,5 +91,14 @@ public class PagoController {
             dtoLista.add(dto);
         }
         return dtoLista;
+    }
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Map<String,Boolean>> eliminarContrato(@PathVariable int id) {
+        var pago = servicio.buscarPagoPorId(id);
+        servicio.EliminarPago(pago);
+        Map<String, Boolean> respuesta = new HashMap<>();
+        respuesta.put("eliminado", true);
+        return ResponseEntity.ok(respuesta);
     }
 }

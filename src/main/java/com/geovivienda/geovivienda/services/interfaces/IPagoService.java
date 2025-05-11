@@ -7,6 +7,8 @@ import java.util.List;
 public interface IPagoService {
     List<Pago> listarPagos();
     Pago guardarPago(Pago pago);
+    void EliminarPago(Pago pago);
+    Pago buscarPagoPorId(Integer id);
     List<String[]> importByTipeCoin();
     List<Object[]> paymentsByDate();
 }
