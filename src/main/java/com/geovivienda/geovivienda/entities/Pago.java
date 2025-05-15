@@ -37,7 +37,7 @@ public class Pago {
     @Column(name = "fecha_vencimiento")
     private Instant fechaVencimiento;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_contrato", nullable = false)
     private Contrato contrato;
 
