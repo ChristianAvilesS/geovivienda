@@ -46,8 +46,8 @@ public class UsuarioController {
         Usuario usuario = modelM.map(dto, Usuario.class);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setInactivo(false);
-        if (usuario.getDireccion().getIdDireccion() != null && usuario.getDireccion().getIdDireccion() != 0) {
-            usuario.setDireccion(dirService.buscarDireccionPorId(usuario.getDireccion().getIdDireccion()));
+        if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
+            usuario.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
         } else {
             DireccionDTO dtoDir = null;
             try {

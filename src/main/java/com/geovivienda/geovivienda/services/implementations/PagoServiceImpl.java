@@ -24,6 +24,13 @@ public class PagoServiceImpl implements IPagoService {
     }
 
     @Override
+    public void EliminarPago(Pago pago) { repos.delete(pago);}
+
+    @Override
+    public Pago buscarPagoPorId(Integer id) {return repos.findById(id).orElse(null);
+    }
+
+    @Override
     public List<String[]> importByTipeCoin() {return repos.importByTipeCoin();}
 
     @Override
