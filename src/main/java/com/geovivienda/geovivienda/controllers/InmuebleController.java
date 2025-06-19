@@ -68,6 +68,24 @@ public class InmuebleController {
         return dtoTemp;
     }
 
+    @PutMapping
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+    public InmuebleDTO editarInmueble(@RequestBody InmuebleDTO dto) {
+        log.info("\nInicio de modificación de inmueble\n");
+        log.info("Inmueble obtenido: {}", dto);
+        var inmueble = modelM.map(dto, Inmueble.class);
+        if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
+            inmueble.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
+        } else {
+            DireccionDTO dtoDir = getDireccionFromAPI(dto.getDireccion().getDireccion());
+            inmueble.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
+        }
+        var dtoTemp = modelM.map(servicio.editarInmueble(inmueble), InmuebleDTO.class);
+        log.info("Inmueble editado: {}", dtoTemp);
+        log.info("\nFin de modificación de inmueble\n");
+        return dtoTemp;
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<InmuebleDTO> obtenerInmueblePorId(@PathVariable int id) {
         log.info("\nInicio de búsqueda de inmueble\n");

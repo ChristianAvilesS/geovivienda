@@ -49,6 +49,16 @@ public class ContratoController {
         return modelM.map(servicio.guardarContrato(contrato), ContratoDTO.class);
     }
 
+    @PutMapping
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    public ContratoDTO editarContrato(@RequestBody ContratoDTO dto){
+        var contrato = modelM.map(dto, Contrato.class);
+        contrato.setComprador(userService.buscarUsuarioPorId(dto.getComprador().getIdUsuario()));
+        contrato.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        contrato.setVendedor(userService.buscarUsuarioPorId(dto.getVendedor().getIdUsuario()));
+        return modelM.map(servicio.editarContrato(contrato), ContratoDTO.class);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ContratoDTO> obtenerContratoPorId(@PathVariable int id) {
         Contrato contrato = servicio.buscarContratoPorId(id);
