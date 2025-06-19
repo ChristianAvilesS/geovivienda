@@ -19,6 +19,11 @@ public interface IInmuebleUsuarioRepository extends JpaRepository<InmuebleUsuari
             "WHERE i.id.idUsuario = :id")
     List<InmuebleUsuario> findInmueblesByUser(@Param("id") int id);
 
+    @Query("SELECT i FROM InmuebleUsuario i " +
+            " WHERE i.id.idInmueble = :id" +
+            " AND i.esDuenio = true")
+    InmuebleUsuario findUsuarioDuenioByInmueble(@Param("id") int id);
+
     @Modifying
     @Query("DELETE InmuebleUsuario iu WHERE iu.inmueble.idInmueble = :id")
     void deleteInmueblesUsuarioByInmueble(@Param("id") int id);

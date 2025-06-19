@@ -50,11 +50,28 @@ public class InmuebleController {
         return inmuebles;
     }
 
+    @GetMapping("/listado-logico")
+    public List<InmuebleDTO> obtenerInmueblesNoEliminados() {
+        log.info("\nInicio de recuperación de inmuebles\n");
+
+        var inmuebles = servicio.listarNoEliminados().stream().map(p -> modelM.map(p, InmuebleDTO.class))
+                .collect(Collectors.toList());
+
+        log.info("\nInmuebles:");
+        inmuebles.forEach(p -> log.info("{}", p));
+
+        log.info("\nFin de recuperación de inmuebles\n");
+        return inmuebles;
+    }
+
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+//@PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
         log.info("\nInicio de registro de inmueble\n");
         log.info("Inmueble obtenido: {}", dto);
+        if (dto.getIdInmueble() != null && dto.getIdInmueble() == 0) {
+            dto.setIdInmueble(null); // CORRECCIÓN CLAVE
+        }
         var inmueble = modelM.map(dto, Inmueble.class);
         if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
             inmueble.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
