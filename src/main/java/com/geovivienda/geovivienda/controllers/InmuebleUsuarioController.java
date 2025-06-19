@@ -162,6 +162,7 @@ public class InmuebleUsuarioController {
             pago.setImporte(dto.getImporte());
             pago.setFechaVencimiento(dto.getFechaVencimientoPago().atStartOfDay(zona).toInstant());
             pago.setMedio(medioPago);
+            pago.setIdPago(null);
 
             pagoService.guardarPago(pago);
 
