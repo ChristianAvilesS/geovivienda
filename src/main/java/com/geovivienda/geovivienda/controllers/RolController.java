@@ -32,7 +32,7 @@ public class RolController {
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public RolDTO agregarRol(@RequestBody RolDTO dto) {
-        return modelM.map(this.servicio.guardarRol(modelM.map(dto, Rol.class)), RolDTO.class);
+        return modelM.map(this.servicio.insertarRol(modelM.map(dto, Rol.class)), RolDTO.class);
     }
 
     @GetMapping("/{id}")

@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,12 +76,6 @@ public class DireccionController {
         Map<String, Boolean> respuesta = new HashMap<>();
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
-    }
-
-    @GetMapping("/buscar")
-    public List<DireccionDTO> obtenerDireccionesEnRango(@RequestBody DireccionDTO dto, @RequestParam("rango") BigDecimal rango) {
-        return servicio.buscarDireccionesEnRango(modelM.map(dto, Direccion.class), rango).stream()
-                .map(p -> modelM.map(p, DireccionDTO.class)).collect(Collectors.toList());
     }
 
 }
