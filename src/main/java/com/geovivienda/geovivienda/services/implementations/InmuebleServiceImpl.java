@@ -64,5 +64,10 @@ public class InmuebleServiceImpl implements IInmuebleService {
         return repos.listarFavoritosPorUsuario(idUsuario);
     }
 
+    @Override
+    public List<Inmueble> listarNoEliminados() {
+        return repos.listarNoEliminados();
+    }
+
 
 }

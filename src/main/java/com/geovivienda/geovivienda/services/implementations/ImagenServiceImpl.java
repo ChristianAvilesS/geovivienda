@@ -38,4 +38,9 @@ public class ImagenServiceImpl implements IImagenService {
     public List<String[]> cantidadImagenesXInmueble() {
         return repos.cantidadImagenesXInmueble();
     }
+
+    @Override
+    public List<Imagen> buscarPorIdInmueble(int idInmueble) {
+        return repos.buscarPorIdInmueble(idInmueble);
+    }
 }
