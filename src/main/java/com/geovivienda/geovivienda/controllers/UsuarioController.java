@@ -42,23 +42,27 @@ public class UsuarioController {
     }
 
     @PostMapping // Cualquiera puede, sin autenticar
-    public UsuarioDevueltoDTO agregarUsuario(@RequestBody UsuarioDTO dto) {
+    public UsuarioDevueltoDTO agregarUsuario(@RequestBody UsuarioDTO dto, @RequestParam("rol") int rol) {
         Usuario usuario = modelM.map(dto, Usuario.class);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setInactivo(false);
         if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
             usuario.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
-        } else {
+        }
+        else {
             DireccionDTO dtoDir = null;
             try {
-                dtoDir = new GeoapifyConnection(dto.getDireccion().getDireccion()).getDireccionDTOAsociada();
-            } catch (Exception e) {
+                dtoDir = new GeoapifyConnection(modelM.map(dto.getDireccion(), DireccionDTO.class))
+                        .getDireccionDTOAsociada();
+            }
+            catch (Exception e) {
                 throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
             }
 
             usuario.setDireccion(dirService.guardarDireccion(modelM.map(dtoDir, Direccion.class)));
         }
-        return modelM.map(servicio.guardarUsuario(usuario), UsuarioDevueltoDTO.class);
+
+        return modelM.map(servicio.insertarUsuarioYRol(usuario, rol), UsuarioDevueltoDTO.class);
     }
 
     @GetMapping("/{id}")
