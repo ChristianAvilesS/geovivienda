@@ -13,4 +13,6 @@ public interface IImagenService {
 
     public List<String[]> cantidadImagenesXInmueble();
 
+    public List<Imagen> buscarPorIdInmueble(int idInmueble);
+
 }

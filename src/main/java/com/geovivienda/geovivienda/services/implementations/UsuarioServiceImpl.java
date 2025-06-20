@@ -1,9 +1,9 @@
 package com.geovivienda.geovivienda.services.implementations;
 
+import com.geovivienda.geovivienda.entities.RolUsuario;
 import com.geovivienda.geovivienda.entities.Usuario;
-import com.geovivienda.geovivienda.repositories.IInmuebleRepository;
-import com.geovivienda.geovivienda.repositories.IInmuebleUsuarioRepository;
-import com.geovivienda.geovivienda.repositories.IUsuarioRepository;
+import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
+import com.geovivienda.geovivienda.repositories.*;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +23,12 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Autowired
     private IInmuebleRepository inmuebleRepos;
 
+    @Autowired
+    private IRolUsuarioRepository rolURepos;
+
+    @Autowired
+    private IRolRepository rolRepos;
+
     @Override
     public List<Usuario> listarUsuarios() {
         return usuarioRepos.findAll();
@@ -36,6 +42,20 @@ public class UsuarioServiceImpl implements IUsuarioService {
     @Override
     public Usuario guardarUsuario(Usuario usuario) {
         return usuarioRepos.save(usuario);
+    }
+
+    @Override
+    public Usuario insertarUsuarioYRol(Usuario usuario, int rol) {
+        Usuario u = usuarioRepos.save(usuario);
+        RolUsuario rolUsuario = new RolUsuario();
+        var rolId = new RolUsuarioId();
+        rolId.setIdUsuario(u.getIdUsuario());
+        rolId.setIdRol(rol);
+        rolUsuario.setId(rolId);
+        rolUsuario.setRol(rolRepos.findById(rol).orElse(null));
+        rolUsuario.setUsuario(u);
+        rolURepos.save(rolUsuario);
+        return u;
     }
 
     @Override

@@ -5,15 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
-import java.math.BigDecimal;
 import java.util.List;
 
 @Repository
 public interface IDireccionRepository extends JpaRepository<Direccion, Integer> {
-    @Query("SELECT dir FROM Direccion dir WHERE dir.latitud" +
-            " BETWEEN :lat - :rango AND :lat + :rango " +
-            "AND dir.longitud BETWEEN :lon - :rango AND :lon + :rango")
-    List<Direccion> buscarDireccionesEnRango(@Param("lat") BigDecimal lat, @Param("lon") BigDecimal lon,
-                                             @Param("rango") BigDecimal rango);
+    @Query("SELECT d FROM Direccion d WHERE d.direccion = :dir")
+    List<Direccion> buscarDireccionPorDireccion(@Param("dir") String dir);
 }

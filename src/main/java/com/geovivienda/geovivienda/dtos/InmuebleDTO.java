@@ -12,7 +12,7 @@ import java.math.BigDecimal;
 @Setter
 public class InmuebleDTO {
 
-    private Integer id;
+    private Integer idInmueble;
 
     private String nombre;
 
@@ -31,7 +31,7 @@ public class InmuebleDTO {
     @Override
     public String toString() {
         return "InmuebleDTO{" +
-                "id=" + id +
+                "id=" + idInmueble +
                 ", nombre='" + nombre + '\'' +
                 ", tipo='" + tipo + '\'' +
                 ", direccion=" + direccion +

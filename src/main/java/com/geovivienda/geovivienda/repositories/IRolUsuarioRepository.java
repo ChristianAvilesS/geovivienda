@@ -1,9 +1,9 @@
 package com.geovivienda.geovivienda.repositories;
 
 import com.geovivienda.geovivienda.entities.RolUsuario;
-import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -21,4 +21,9 @@ public interface IRolUsuarioRepository extends JpaRepository<RolUsuario, RolUsua
             " ORDER BY r.idRol DESC" +
             " LIMIT 1")
     List<String[]> findPredominantUserRol(@Param("id") int idUsuario);
+
+    @Modifying
+    @Query(value = "DELETE FROM roles_x_usuario WHERE id_usuario = :idUsuario AND id_rol > :nuevoIdRol", nativeQuery = true)
+    void eliminarRolesDeMayorPrioridad(@Param("idUsuario") Integer idUsuario, @Param("nuevoIdRol") Integer nuevoIdRol);
+
 }

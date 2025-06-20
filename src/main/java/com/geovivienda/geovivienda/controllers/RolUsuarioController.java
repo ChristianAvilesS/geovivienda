@@ -5,9 +5,7 @@ import com.geovivienda.geovivienda.dtos.RolUsuarioDTO;
 import com.geovivienda.geovivienda.entities.RolUsuario;
 import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
-import com.geovivienda.geovivienda.services.interfaces.IRolService;
 import com.geovivienda.geovivienda.services.interfaces.IRolUsuarioService;
-import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,12 +25,6 @@ public class RolUsuarioController {
     @Autowired
     private IRolUsuarioService servicio;
 
-    @Autowired
-    private IRolService rolService;
-
-    @Autowired
-    private IUsuarioService usuarioService;
-
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<RolUsuarioDTO> obtenerRolUsuarios() {
@@ -42,12 +34,8 @@ public class RolUsuarioController {
 
     @PostMapping
     public RolUsuarioDTO agregarRolUsuario(@RequestBody RolUsuarioDTO dto) {
-        System.out.println(dto.getIdRolUsuario().getIdRol());
-        System.out.println(dto.getIdRolUsuario().getIdUsuario());
         RolUsuario rolUsuario = new RolUsuario();
         rolUsuario.setId(dto.getIdRolUsuario());
-        rolUsuario.setUsuario(usuarioService.buscarUsuarioPorId(dto.getIdRolUsuario().getIdUsuario()));
-        rolUsuario.setRol(rolService.buscarRolPorId(dto.getIdRolUsuario().getIdRol()));
 
         return modelM.map(servicio.guardarRolUsuario(rolUsuario), RolUsuarioDTO.class);
     }

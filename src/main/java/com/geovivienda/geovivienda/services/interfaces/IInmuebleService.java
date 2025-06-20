@@ -19,4 +19,5 @@ public interface IInmuebleService {
                                     BigDecimal latitud, BigDecimal longitud,
                                     BigDecimal radio, String tipo);
     List<Inmueble> listarFavoritosPorUsuario(int idUsuario);
+    List<Inmueble> listarNoEliminados();
 }
