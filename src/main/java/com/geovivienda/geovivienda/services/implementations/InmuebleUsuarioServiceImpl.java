@@ -27,6 +27,11 @@ public class InmuebleUsuarioServiceImpl implements IInmuebleUsuarioService {
     }
 
     @Override
+    public InmuebleUsuario findUsuarioDuenioByInmueble(int id) {
+        return repo.findUsuarioDuenioByInmueble(id);
+    }
+
+    @Override
     public InmuebleUsuario guardarInmuebleUsuario(InmuebleUsuario inmuebleUsuario) {
         return repo.save(inmuebleUsuario);
     }

@@ -75,6 +75,15 @@ public class InmuebleUsuarioController {
         throw new RecursoNoEncontradoException("No se encontró el id: " + id);
     }
 
+    @GetMapping("/duenio/{idInmueble}")
+    public ResponseEntity<InmuebleUsuarioDTO> obtenerUsuarioDuenio(@PathVariable int idInmueble) {
+        InmuebleUsuario inmuebleUsuario = servicio.findUsuarioDuenioByInmueble(idInmueble);
+        if(inmuebleUsuario != null){
+            return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
+        }
+        throw new RecursoNoEncontradoException("No se encontró el id: " + idInmueble);
+    }
+
     @DeleteMapping
     public ResponseEntity<Map<String,Boolean>> eliminarInmuebleUsuario(@RequestBody InmuebleUsuarioId id) {
         var inmuebleUsuario = servicio.buscarInmuebleUsuarioPorId(id);

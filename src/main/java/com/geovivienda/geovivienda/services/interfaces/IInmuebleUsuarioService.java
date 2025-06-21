@@ -9,6 +9,7 @@ public interface IInmuebleUsuarioService {
 
     List<InmuebleUsuario> listarInmuebleUsuarios();
     InmuebleUsuario buscarInmuebleUsuarioPorId(InmuebleUsuarioId id);
+    InmuebleUsuario findUsuarioDuenioByInmueble(int id);
     InmuebleUsuario guardarInmuebleUsuario(InmuebleUsuario usuario);
     void eliminarInmuebleUsuario(InmuebleUsuario usuario);
     InmuebleUsuario marcarDesmarcarFavorito(int idInmueble, int idUsuario);
