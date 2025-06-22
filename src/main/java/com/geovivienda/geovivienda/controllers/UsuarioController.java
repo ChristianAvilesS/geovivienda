@@ -48,14 +48,12 @@ public class UsuarioController {
         usuario.setInactivo(false);
         if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
             usuario.setDireccion(dirService.buscarDireccionPorId(dto.getDireccion().getIdDireccion()));
-        }
-        else {
+        } else {
             DireccionDTO dtoDir = null;
             try {
                 dtoDir = new GeoapifyConnection(modelM.map(dto.getDireccion(), DireccionDTO.class))
                         .getDireccionDTOAsociada();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new LocationNotFoundException("No se encontró la dirección propuesta o el formato es incorrecto");
             }
 
@@ -96,5 +94,10 @@ public class UsuarioController {
         return ResponseEntity.ok(modelM.map(servicio.eliminarUsuario(usuario), UsuarioDevueltoDTO.class));
     }
 
-
+    @GetMapping("/no-eliminados")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<UsuarioDevueltoDTO> obtenerUsuariosNoEliminados() {
+        return servicio.listarUsuariosNoEliminados().stream()
+                .map(p -> modelM.map(p, UsuarioDevueltoDTO.class)).collect(Collectors.toList());
+    }
 }

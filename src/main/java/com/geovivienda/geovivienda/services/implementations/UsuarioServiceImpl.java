@@ -74,4 +74,9 @@ public class UsuarioServiceImpl implements IUsuarioService {
         inmuebleUsuarioRepos.deleteInmueblesUsuarioByUser(usuario.getIdUsuario());
         return guardarUsuario(usuario);
     }
+
+    @Override
+    public List<Usuario> listarUsuariosNoEliminados() {
+        return usuarioRepos.listNotEliminated();
+    }
 }

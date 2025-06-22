@@ -6,8 +6,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface IUsuarioRepository extends JpaRepository<Usuario, Integer> {
     @Query("SELECT u FROM Usuario u WHERE u.username = :username")
     Usuario findUsuarioByUsername(@Param("username") String username);
+
+    @Query("SELECT u FROM Usuario u WHERE u.inactivo = false")
+    List<Usuario> listNotEliminated();
 }

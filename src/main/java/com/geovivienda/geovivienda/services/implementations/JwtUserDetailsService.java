@@ -3,10 +3,10 @@ package com.geovivienda.geovivienda.services.implementations;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.repositories.IRolUsuarioRepository;
 import com.geovivienda.geovivienda.repositories.IUsuarioRepository;
+import com.geovivienda.geovivienda.securities.UserDetailsExtra;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -41,6 +41,6 @@ public class JwtUserDetailsService implements UserDetailsService {
         rolUsuarioRepos.buscarRolesPorUsuario(user.getIdUsuario()).forEach(rolUsuario ->
                 roles.add(new SimpleGrantedAuthority(rolUsuario.getRol().getRol())));
 
-        return new User(user.getUsername(), user.getPassword(), !user.getInactivo(), true, true, true, roles);
+        return new UserDetailsExtra(user, roles, true, true, true);
     }
 }
