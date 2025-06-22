@@ -1,20 +1,14 @@
 package com.geovivienda.geovivienda.externalapis;
 
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
-import com.geovivienda.geovivienda.exceptions.LocationNotFoundException;
-import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 @Getter
@@ -22,8 +16,11 @@ import java.net.URL;
 public class GeoapifyConnection {
     private static final String API_KEY = "a638798ea1c142ef85837a2036970f91";
     private static final String SEARCH_PARAMS = "&lang=es&limit=1&type=street&format=json";
-    private static final String URL = "https://api.geoapify.com/v1/geocode/search?";
+    private static final String URL_GEOCODE = "https://api.geoapify.com/v1/geocode/search?";
+    private static final String URL_REVERSE_GEOCODE = "https://api.geoapify.com/v1/geocode/reverse?";
     private String address;
+
+    private DireccionDTO dto;
 
     public GeoapifyConnection() {
         this.address = "Avenida Primavera, Santiago de Surco, Lima Metropolitana 15023, Peru";
@@ -33,8 +30,12 @@ public class GeoapifyConnection {
         this.address = address;
     }
 
-    private JSONObject geolocateAddress() throws Exception {
-        var urlQuery = URL + "text=" + address.replaceAll(" ", "%20") + SEARCH_PARAMS + "&apiKey=" + API_KEY;
+    public GeoapifyConnection(DireccionDTO dto) {
+        this.address = dto.getDireccion();
+        this.dto = dto;
+    }
+
+    private JSONObject getResponseFromAPI(String urlQuery) throws Exception {
         URL url = new URL(urlQuery);
         HttpURLConnection http = (HttpURLConnection) url.openConnection();
         http.setRequestProperty("Accept", "application/json");
@@ -56,7 +57,11 @@ public class GeoapifyConnection {
     }
 
     public DireccionDTO getDireccionDTOAsociada() throws Exception {
-        JSONObject result = this.geolocateAddress();
+        String urlQuery = address != null ? URL_GEOCODE + "text=" + address.replaceAll(" ", "%20")
+                + SEARCH_PARAMS + "&apiKey=" + API_KEY
+                : URL_REVERSE_GEOCODE + "lat=" + dto.getLatitud() + "&lon=" + dto.getLongitud()
+                + SEARCH_PARAMS + "&apiKey=" + API_KEY;
+        JSONObject result = this.getResponseFromAPI(urlQuery);
         String formattedAddress = result.get("formatted").toString();
         BigDecimal latitud = new BigDecimal(result.get("lat").toString());
         BigDecimal longitud = new BigDecimal(result.get("lon").toString());
