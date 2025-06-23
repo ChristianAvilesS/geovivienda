@@ -70,5 +70,10 @@ public class RolController {
         return modelM.map(this.servicio.buscarRolPorNombre(nombre), RolDTO.class);
     }
 
+    @GetMapping("/roles-clientes")
+    public List<RolDTO> listarRolesSinAdmin() {
+        return servicio.listarRolesSinAdmin().stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
+    }
+
 
 }

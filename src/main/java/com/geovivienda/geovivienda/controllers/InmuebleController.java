@@ -16,8 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -65,7 +63,7 @@ public class InmuebleController {
     }
 
     @PostMapping
-//@PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
         log.info("\nInicio de registro de inmueble\n");
         log.info("Inmueble obtenido: {}", dto);
@@ -134,7 +132,7 @@ public class InmuebleController {
         log.info("\nInicio de query de búsqueda de inmuebles cerca a una dirección inmueble\n");
         DireccionDTO direccion = getDireccionFromAPI(dir);
         var resultado = servicio.buscarInmueblesEnLugarEnRango(direccion.getLongitud(),
-                        direccion.getLatitud(), rango).stream().map(this::createInmuebleDireccionDTO).toList();
+                direccion.getLatitud(), rango).stream().map(this::createInmuebleDireccionDTO).toList();
         log.info("Resultado:");
         resultado.forEach(i -> log.info("{}", i));
         return resultado;
