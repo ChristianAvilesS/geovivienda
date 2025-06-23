@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(antMatcher("/geovivienda/login")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geovivienda/usuarios")).permitAll()
+                        .requestMatchers(antMatcher(HttpMethod.GET, "/geovivienda/roles/roles-clientes")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geovivienda/rolesusuario")).permitAll()
                         .requestMatchers(
                                 "/v3/api-docs/**",

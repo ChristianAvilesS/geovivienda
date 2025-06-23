@@ -44,6 +44,7 @@ public class UsuarioController {
     @PostMapping // Cualquiera puede, sin autenticar
     public UsuarioDevueltoDTO agregarUsuario(@RequestBody UsuarioDTO dto, @RequestParam("rol") int rol) {
         Usuario usuario = modelM.map(dto, Usuario.class);
+        usuario.setIdUsuario(null);
         usuario.setPassword(passwordEncoder.encode(dto.getPassword()));
         usuario.setInactivo(false);
         if (dto.getDireccion().getIdDireccion() != null && dto.getDireccion().getIdDireccion() != 0) {
