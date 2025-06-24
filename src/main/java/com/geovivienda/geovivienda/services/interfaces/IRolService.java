@@ -14,5 +14,6 @@ public interface IRolService {
     Rol guardarRol(Rol rol);
     void eliminarRol(Rol rol);
     Rol buscarRolPorNombre(String nombre);
+    List<Rol> listarRolesSinAdmin();
 
 }

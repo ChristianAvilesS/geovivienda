@@ -41,7 +41,7 @@ public class ImagenController {
     }
 
     @PostMapping
-    //@PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ImagenDTO agregarImagen(@RequestBody ImagenDTO dto) {
         Imagen imagen = modelM.map(dto, Imagen.class);
         imagen.setInmueble(inService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));

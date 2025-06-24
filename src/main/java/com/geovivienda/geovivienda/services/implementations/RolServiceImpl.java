@@ -52,5 +52,10 @@ public class RolServiceImpl implements IRolService {
         return repos.buscarRolPorNombre(nombre);
     }
 
+    @Override
+    public List<Rol> listarRolesSinAdmin() {
+        return repos.listarRolesSinAdmin();
+    }
+
 
 }
