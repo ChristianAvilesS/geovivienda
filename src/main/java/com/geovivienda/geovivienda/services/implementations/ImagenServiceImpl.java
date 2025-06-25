@@ -33,4 +33,14 @@ public class ImagenServiceImpl implements IImagenService {
     public void eliminarImagen(Imagen imagen) {
         repos.delete(imagen);
     }
+
+    @Override
+    public List<String[]> cantidadImagenesXInmueble() {
+        return repos.cantidadImagenesXInmueble();
+    }
+
+    @Override
+    public List<Imagen> buscarPorIdInmueble(int idInmueble) {
+        return repos.buscarPorIdInmueble(idInmueble);
+    }
 }

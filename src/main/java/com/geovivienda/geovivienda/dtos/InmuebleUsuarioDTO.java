@@ -6,6 +6,8 @@ import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 public class InmuebleUsuarioDTO {
@@ -13,9 +15,13 @@ public class InmuebleUsuarioDTO {
 
     private Usuario usuario;
 
-    private Inmueble idInmueble;
+    private Inmueble inmueble;
 
     private Boolean esDuenio;
 
     private Boolean esFavorito;
+
+    private String estadoSolicitud;
+
+    private LocalDate fechaSolicitud;
 }

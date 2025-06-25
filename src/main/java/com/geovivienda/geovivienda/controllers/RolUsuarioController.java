@@ -1,5 +1,6 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.RolPredominanteDTO;
 import com.geovivienda.geovivienda.dtos.RolUsuarioDTO;
 import com.geovivienda.geovivienda.entities.RolUsuario;
 import com.geovivienda.geovivienda.entities.ids.RolUsuarioId;
@@ -8,6 +9,7 @@ import com.geovivienda.geovivienda.services.interfaces.IRolUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -24,6 +26,7 @@ public class RolUsuarioController {
     private IRolUsuarioService servicio;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<RolUsuarioDTO> obtenerRolUsuarios() {
         return servicio.listarRolesUsuario().stream()
                 .map(p -> modelM.map(p, RolUsuarioDTO.class)).collect(Collectors.toList());
@@ -31,7 +34,10 @@ public class RolUsuarioController {
 
     @PostMapping
     public RolUsuarioDTO agregarRolUsuario(@RequestBody RolUsuarioDTO dto) {
-        return modelM.map(this.servicio.guardarRolUsuario(modelM.map(dto, RolUsuario.class)), RolUsuarioDTO.class);
+        RolUsuario rolUsuario = new RolUsuario();
+        rolUsuario.setId(dto.getIdRolUsuario());
+
+        return modelM.map(servicio.guardarRolUsuario(rolUsuario), RolUsuarioDTO.class);
     }
 
     @GetMapping("/buscar")
@@ -53,9 +59,19 @@ public class RolUsuarioController {
     }
 
     @GetMapping("/buscar/{id}")
-    public List<RolUsuarioDTO> obtenerRolUsuarioPorId(@PathVariable int id) {
+    public List<RolUsuarioDTO> obtenerRolesUsuarioPorId(@PathVariable int id) {
         return servicio.buscarRolesPorUsuario(id).stream().map(ru -> modelM.map(ru, RolUsuarioDTO.class)
         ).collect(Collectors.toList());
+    }
+
+    @GetMapping("/rol_predom/{id}")
+    public RolPredominanteDTO obtenerRolPredominantePorUsuario(@PathVariable int id) {
+        return servicio.findPredominantUserRol(id).stream().map(r -> {
+            RolPredominanteDTO dto = new RolPredominanteDTO();
+            dto.setIdUsuario(id);
+            dto.setRol(r[1]);
+            return dto;
+        }).toList().get(0);
     }
 
 }

@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "anuncios")
@@ -17,7 +16,7 @@ public class Anuncio {
     @Column(name = "id_anuncio", nullable = false)
     private Integer idAnuncio;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_anunciante", nullable = false)
     private Usuario anunciante;
 
@@ -27,8 +26,17 @@ public class Anuncio {
     @Column(name = "fecha_publicacion")
     private LocalDateTime fechaPublicacion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_inmueble", nullable = false)
     private Inmueble inmueble;
 
+    public Anuncio()
+    {}
+
+    public Anuncio(Usuario anunciante, String descripcion, LocalDateTime fechaPublicacion, Inmueble inmueble) {
+        this.anunciante = anunciante;
+        this.descripcion = descripcion;
+        this.fechaPublicacion = fechaPublicacion;
+        this.inmueble = inmueble;
+    }
 }

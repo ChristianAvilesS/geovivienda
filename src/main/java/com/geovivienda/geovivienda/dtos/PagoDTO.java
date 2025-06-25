@@ -15,8 +15,8 @@ public class PagoDTO {
     private String descripcion;
     private BigDecimal importe;
     private String tipoMoneda;
-    private MedioPago idMedio;
+    private MedioPago medio;
     private Instant fechaPago;
     private Instant fechaVencimiento;
-    private Contrato idContrato;
+    private Contrato contrato;
 }

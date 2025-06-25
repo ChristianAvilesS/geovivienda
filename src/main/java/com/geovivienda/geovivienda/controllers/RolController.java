@@ -7,6 +7,7 @@ import com.geovivienda.geovivienda.services.interfaces.IRolService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -23,16 +24,19 @@ public class RolController {
     private IRolService servicio;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<RolDTO> obtenerRoles() {
         return servicio.listarRoles().stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
     }
 
     @PostMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RolDTO agregarRol(@RequestBody RolDTO dto) {
-        return modelM.map(this.servicio.guardarRol(modelM.map(dto, Rol.class)), RolDTO.class);
+        return modelM.map(this.servicio.insertarRol(modelM.map(dto, Rol.class)), RolDTO.class);
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RolDTO> obtenerRolPorId(@PathVariable int id) {
         Rol rol = servicio.buscarRolPorId(id);
         if (rol != null) {
@@ -42,6 +46,7 @@ public class RolController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<RolDTO> actualizarRol(@PathVariable int id, @RequestBody RolDTO dto) { // Se eliminará
         Rol rol = this.servicio.buscarRolPorId(id);
         rol.setRol(dto.getRol());
@@ -50,6 +55,7 @@ public class RolController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarRol(@PathVariable int id) { // Se eliminará
         var rol = servicio.buscarRolPorId(id);
         servicio.eliminarRol(rol);
@@ -59,8 +65,14 @@ public class RolController {
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public RolDTO buscarRolPorNombre(@RequestParam String nombre) {
         return modelM.map(this.servicio.buscarRolPorNombre(nombre), RolDTO.class);
+    }
+
+    @GetMapping("/roles-clientes")
+    public List<RolDTO> listarRolesSinAdmin() {
+        return servicio.listarRolesSinAdmin().stream().map(p -> modelM.map(p, RolDTO.class)).collect(Collectors.toList());
     }
 
 

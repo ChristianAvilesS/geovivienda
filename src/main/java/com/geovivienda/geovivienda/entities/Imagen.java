@@ -15,7 +15,7 @@ public class Imagen {
     @Column(name = "id_imagen", nullable = false)
     private Integer idImagen;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_inmueble", nullable = false)
     private Inmueble inmueble;
 
@@ -24,5 +24,4 @@ public class Imagen {
 
     @Column(name = "titulo", length = 50)
     private String titulo;
-
 }

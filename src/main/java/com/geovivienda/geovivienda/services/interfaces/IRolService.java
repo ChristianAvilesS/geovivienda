@@ -10,8 +10,10 @@ public interface IRolService {
     Rol buscarRolPorId(Integer id);
 
     // Cumple la función de insertar y actualizar
+    Rol insertarRol(Rol rol);
     Rol guardarRol(Rol rol);
     void eliminarRol(Rol rol);
     Rol buscarRolPorNombre(String nombre);
+    List<Rol> listarRolesSinAdmin();
 
 }

@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Entity
 @Table(name = "direcciones")
 public class Direccion {
@@ -20,10 +21,10 @@ public class Direccion {
     @Column(name = "direccion", length = 100)
     private String direccion;
 
-    @Column(name = "longitud", precision = 11, scale = 3)
+    @Column(name = "longitud", precision = 11, scale = 7)
     private BigDecimal longitud;
 
-    @Column(name = "latitud", precision = 11, scale = 3)
+    @Column(name = "latitud", precision = 11, scale = 7)
     private BigDecimal latitud;
 
 }

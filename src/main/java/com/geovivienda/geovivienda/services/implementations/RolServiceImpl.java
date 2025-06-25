@@ -5,6 +5,7 @@ import com.geovivienda.geovivienda.repositories.IRolRepository;
 import com.geovivienda.geovivienda.services.interfaces.IRolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,18 @@ public class RolServiceImpl implements IRolService {
     }
 
     @Override
+    @Transactional
+    public Rol insertarRol(Rol rol) {
+        int idAdmin = buscarRolPorNombre("ADMIN").getIdRol();
+        var role = new Rol();
+        role.setRol("ADMIN");
+        int nuevoId = guardarRol(role).getIdRol();
+        repos.actualizarRolesUsuarioPorCambioAdmin(nuevoId, idAdmin);
+        rol.setIdRol(idAdmin);
+        return guardarRol(rol);
+    }
+
+    @Override
     public Rol guardarRol(Rol rol) {
         return repos.save(rol);
     }
@@ -37,6 +50,11 @@ public class RolServiceImpl implements IRolService {
     @Override
     public Rol buscarRolPorNombre(String nombre) {
         return repos.buscarRolPorNombre(nombre);
+    }
+
+    @Override
+    public List<Rol> listarRolesSinAdmin() {
+        return repos.listarRolesSinAdmin();
     }
 
 

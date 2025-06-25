@@ -2,14 +2,19 @@ package com.geovivienda.geovivienda.controllers;
 
 
 import com.geovivienda.geovivienda.dtos.AnuncioDTO;
+import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
 import com.geovivienda.geovivienda.entities.Anuncio;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IAnuncioService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +28,12 @@ public class AnuncioController {
     @Autowired
     private IAnuncioService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
     public List<AnuncioDTO> obtenerAnuncios() {
         return servicio.listarAnuncios().stream()
@@ -30,8 +41,12 @@ public class AnuncioController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public AnuncioDTO agregarAnuncio(@RequestBody AnuncioDTO dto) {
-        return modelM.map(this.servicio.guardarAnuncio(modelM.map(dto, Anuncio.class)), AnuncioDTO.class);
+        var anuncio = modelM.map(dto, Anuncio.class);
+        anuncio.setAnunciante(userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario()));
+        anuncio.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        return modelM.map(this.servicio.guardarAnuncio(anuncio), AnuncioDTO.class);
     }
 
     @GetMapping("/{id}")
@@ -44,6 +59,7 @@ public class AnuncioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarAnuncio(@PathVariable int id) {
         var anuncio = servicio.buscarAnuncioPorId(id);
         servicio.eliminarAnuncio(anuncio);
@@ -52,6 +68,20 @@ public class AnuncioController {
         return ResponseEntity.ok(respuesta);
     }
 
+    @GetMapping("/cantidad")
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+    public List<CantidadAnunciosXUsuarioDTO> obtenerCantidadAnunciosXUsuario() {
+        List<CantidadAnunciosXUsuarioDTO> dtoLista = new ArrayList<>();
+        List<String[]> filaLista = servicio.cantidadAnunciosXUsuario();
+        for (String[] columna : filaLista) {
+            CantidadAnunciosXUsuarioDTO dto = new CantidadAnunciosXUsuarioDTO();
+            dto.setNombreUsuario(columna[0]);
+            dto.setCantidadAnuncios(Integer.parseInt(columna[2]));
+            dtoLista.add(dto);
+        }
+        return dtoLista;
+
+    }
 
 
 }

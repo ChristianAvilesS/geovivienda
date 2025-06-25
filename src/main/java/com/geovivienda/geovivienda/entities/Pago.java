@@ -14,6 +14,7 @@ import java.time.Instant;
 @Table(name = "pagos")
 public class Pago {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pago", nullable = false)
     private Integer idPago;
 
@@ -36,7 +37,7 @@ public class Pago {
     @Column(name = "fecha_vencimiento")
     private Instant fechaVencimiento;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_contrato", nullable = false)
     private Contrato contrato;
 

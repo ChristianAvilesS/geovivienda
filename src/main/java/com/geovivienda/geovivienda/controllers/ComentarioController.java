@@ -5,9 +5,12 @@ import com.geovivienda.geovivienda.entities.Comentario;
 import com.geovivienda.geovivienda.entities.Inmueble;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IComentarioService;
+import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
+import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +24,14 @@ public class ComentarioController {
     @Autowired
     private IComentarioService servicio;
 
+    @Autowired
+    private IUsuarioService userService;
+
+    @Autowired
+    private IInmuebleService inmuebleService;
+
     @GetMapping
+    @PreAuthorize("hasAuthority('ADMIN')")
     public List<ComentarioDTO> obtenerComentarios() {
         return servicio.listarComentario().stream()
                 .map(p -> modelM.map(p, ComentarioDTO.class)).collect(Collectors.toList());
@@ -29,7 +39,10 @@ public class ComentarioController {
 
     @PostMapping
     public ComentarioDTO agregarComentario(@RequestBody ComentarioDTO dto) {
-        return modelM.map(this.servicio.guardarComentario(modelM.map(dto, Comentario.class)), ComentarioDTO.class);
+        var comentario = modelM.map(dto, Comentario.class);
+        comentario.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
+        comentario.setUsuario(userService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
+        return modelM.map(this.servicio.guardarComentario(comentario), ComentarioDTO.class);
     }
 
     @GetMapping("/{id}")

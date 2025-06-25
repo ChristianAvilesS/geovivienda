@@ -11,6 +11,8 @@ public interface IUsuarioService {
 
     // Cumple la función de insertar y actualizar
     Usuario guardarUsuario(Usuario usuario);
+
+    Usuario insertarUsuarioYRol(Usuario usuario, int rol);
     Usuario eliminarUsuario(Usuario usuario);
-    Usuario verificarLogin(Usuario usuario);
+    List<Usuario> listarUsuariosNoEliminados();
 }

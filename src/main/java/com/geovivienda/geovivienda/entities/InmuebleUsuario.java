@@ -4,6 +4,8 @@ import com.geovivienda.geovivienda.entities.ids.InmuebleUsuarioId;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -15,12 +17,12 @@ public class InmuebleUsuario {
     private InmuebleUsuarioId id;
 
     @MapsId("idUsuario")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @MapsId("idInmueble")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_inmueble", nullable = false)
     private Inmueble inmueble;
 
@@ -29,5 +31,11 @@ public class InmuebleUsuario {
 
     @Column(name = "es_favorito")
     private Boolean esFavorito;
+
+    @Column(name = "estado_solicitud")
+    private String estadoSolicitud; //Estados: ninguno, solicitado, aprobado, rechazado, comprado
+
+    @Column(name = "fecha_solicitud")
+    private LocalDate fechaSolicitud;
 
 }
