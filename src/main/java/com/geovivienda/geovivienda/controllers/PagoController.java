@@ -12,12 +12,15 @@ import com.geovivienda.geovivienda.services.interfaces.IPagoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,7 +73,7 @@ public class PagoController {
         for(Object[] columna:filaLista) {
             PagosCercanosDTO dto = new PagosCercanosDTO();
             dto.setIdPago((Integer) columna[0]);
-            dto.setFechaVencimiento((Instant) columna[1]);
+            dto.setFechaPago((Instant) columna[1]);
             dto.setInmueble((String) columna[2]);
             dto.setImporte((BigDecimal) columna[3]);
             dto.setTipoMoneda((String) columna[4]);

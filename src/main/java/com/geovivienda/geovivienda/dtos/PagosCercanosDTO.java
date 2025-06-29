@@ -10,7 +10,7 @@ import java.time.Instant;
 @Getter
 public class PagosCercanosDTO {
     private Integer idPago;
-    private Instant fechaVencimiento;
+    private Instant fechaPago;
     private String inmueble;
     private BigDecimal importe;
     private String tipoMoneda;
