@@ -49,10 +49,10 @@ public class InmuebleController {
     }
 
     @GetMapping("/listado-logico")
-    public List<InmuebleDTO> obtenerInmueblesNoEliminados() {
+    public List<InmuebleDTO> listarDisponibles() {
         log.info("\nInicio de recuperación de inmuebles\n");
 
-        var inmuebles = servicio.listarNoEliminados().stream().map(p -> modelM.map(p, InmuebleDTO.class))
+        var inmuebles = servicio.listarDisponibles().stream().map(p -> modelM.map(p, InmuebleDTO.class))
                 .collect(Collectors.toList());
 
         log.info("\nInmuebles:");
@@ -139,13 +139,13 @@ public class InmuebleController {
     }
 
     @GetMapping("/inmuebles_cerca_usuario")
-    public List<InmuebleDireccionDTO> obtenerInmueblesCercaAUsuario(@RequestParam("lon") BigDecimal longitud,
+    public List<InmuebleDTO> obtenerInmueblesCercaAUsuario(@RequestParam("lon") BigDecimal longitud,
                                                                     @RequestParam("lat") BigDecimal latitud) {
         log.info("\nInicio de query de búsqueda de inmuebles cerca al usuario\n");
-        BigDecimal rango = BigDecimal.valueOf(0.01); // Radio de 1.1 km aprox
+        BigDecimal rango = BigDecimal.valueOf(0.1); // Radio de 1.1 km aprox
 
         var resultado = servicio.buscarInmueblesEnLugarEnRango(longitud, latitud, rango).stream()
-                .map(this::createInmuebleDireccionDTO).toList();
+                .map(i-> modelM.map(i, InmuebleDTO.class)).collect(Collectors.toList());
         log.info("Resultado:");
         resultado.forEach(i -> log.info("{}", i));
         return resultado;
