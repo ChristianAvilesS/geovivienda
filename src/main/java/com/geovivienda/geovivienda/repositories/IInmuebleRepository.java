@@ -46,7 +46,7 @@ public interface IInmuebleRepository extends JpaRepository<Inmueble, Integer> {
             "WHERE i.idInmueble = :id")
     void deleteLogically(@Param("id") int id);
 
-    @Query("SELECT i FROM Inmueble i WHERE i.estado != 'ELIMINADO'")
-    List<Inmueble> listarNoEliminados();
+    @Query("SELECT i FROM Inmueble i WHERE i.estado = 'DISPONIBLE'")
+    List<Inmueble> listarDisponibles();
 
 }

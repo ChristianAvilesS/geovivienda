@@ -63,6 +63,9 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geovivienda/usuarios")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.GET, "/geovivienda/roles/roles-clientes")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geovivienda/rolesusuario")).permitAll()
+                        .requestMatchers( "/geovivienda/inmuebles/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
+
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
