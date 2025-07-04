@@ -6,6 +6,6 @@ import lombok.Setter;
 @Setter
 @Getter
 public class MedioPagoDTO {
-    private Integer id;
+    private Integer idMedio;
     private String medioPago;
 }

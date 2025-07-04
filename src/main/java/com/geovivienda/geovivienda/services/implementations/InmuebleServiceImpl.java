@@ -65,8 +65,8 @@ public class InmuebleServiceImpl implements IInmuebleService {
     }
 
     @Override
-    public List<Inmueble> listarNoEliminados() {
-        return repos.listarNoEliminados();
+    public List<Inmueble> listarDisponibles() {
+        return repos.listarDisponibles();
     }
 
 
