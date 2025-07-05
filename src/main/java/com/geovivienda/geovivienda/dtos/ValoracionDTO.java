@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 public class ValoracionDTO {
-    private Integer id;
+    private Integer idValoracion;
     private Usuario usuario;
     private BigDecimal rating;
     private Inmueble inmueble;
