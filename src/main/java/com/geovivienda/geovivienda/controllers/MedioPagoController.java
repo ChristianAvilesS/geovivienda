@@ -53,4 +53,17 @@ public class MedioPagoController {
         respuesta.put("eliminado", true);
         return ResponseEntity.ok(respuesta);
     }
+
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<MedioPagoDTO> obtenerMedioPagoPorId(@PathVariable int id) {
+        MedioPago mp = servicio.buscarMedioPagoPorId(id);
+        if (mp != null) {
+            MedioPagoDTO dto = modelM.map(mp, MedioPagoDTO.class);
+            return ResponseEntity.ok(dto);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

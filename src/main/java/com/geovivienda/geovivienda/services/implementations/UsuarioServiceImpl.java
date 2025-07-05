@@ -79,4 +79,11 @@ public class UsuarioServiceImpl implements IUsuarioService {
     public List<Usuario> listarUsuariosNoEliminados() {
         return usuarioRepos.listNotEliminated();
     }
+
+    @Override
+    public void cambiarPassword(String username, String password) {
+        var usuario = usuarioRepos.findUsuarioByUsername(username);
+        usuario.setPassword(password);
+        usuarioRepos.save(usuario);
+    }
 }
