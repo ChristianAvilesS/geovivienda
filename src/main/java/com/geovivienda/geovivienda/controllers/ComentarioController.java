@@ -1,6 +1,7 @@
 package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.ComentarioDTO;
+import com.geovivienda.geovivienda.dtos.InmuebleDTO;
 import com.geovivienda.geovivienda.entities.Comentario;
 import com.geovivienda.geovivienda.entities.Inmueble;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
@@ -57,9 +58,25 @@ public class ComentarioController {
 
     @GetMapping("/buscarporinmueble/{id}")
     public List<ComentarioDTO> findByInmueble(@PathVariable Integer id) {
-
-        Inmueble inmueble = servicio.findById(id).getInmueble();
-        return servicio.findByInmueble(inmueble).stream()
+        return servicio.findByInmueble(id).stream()
                 .map(p -> modelM.map(p, ComentarioDTO.class)).collect(Collectors.toList());
     }
+
+    @GetMapping("/buscarporusarioinmueble")
+    public ResponseEntity<ComentarioDTO> findByUseryInmueble(@RequestParam int idUsuario, @RequestParam int idInmueble)
+    {
+        Comentario comentario = servicio.findByUseryInmueble(idUsuario, idInmueble);
+        if (comentario != null) {
+            return ResponseEntity.ok(modelM.map(comentario, ComentarioDTO.class));
+        }
+        throw new RecursoNoEncontradoException("No se encontro el id: " + idUsuario);
+    }
+
+    @PutMapping
+    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
+    public Comentario editarComentario(@RequestBody ComentarioDTO dto) {
+        var comentario = modelM.map(dto, Comentario.class);
+        return servicio.editarComentario(comentario);
+    }
+
 }
