@@ -35,7 +35,7 @@ public class ValoracionController {
     private IInmuebleService inmuebleService;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public List<ValoracionDTO> listarValoraciones() {
         return servicio.listarValoraciones().stream()
                 .map(v -> modelM.map(v, ValoracionDTO.class)).collect(Collectors.toList());
@@ -46,6 +46,7 @@ public class ValoracionController {
     @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public ValoracionDTO agregarValoracion(@RequestBody ValoracionDTO dto){
         var valoracion = modelM.map(dto, Valoracion.class);
+        valoracion.setIdValoracion(null);
         valoracion.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
         valoracion.setUsuario(userService.buscarUsuarioPorId(dto.getUsuario().getIdUsuario()));
         return modelM.map(this.servicio.guardarValoracion(valoracion), ValoracionDTO.class);
@@ -90,8 +91,7 @@ public class ValoracionController {
     }
 
 
-    @GetMapping("/valoracioninmueble")
-    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
+    @GetMapping("/promediovaloracion")
     public List<ValoracionInmuebleDTO> obtenerValoracion() {
         List<ValoracionInmuebleDTO> dtoLista = new ArrayList<>();
         List<String[]> filaLista = servicio.valoracionInmueble();
