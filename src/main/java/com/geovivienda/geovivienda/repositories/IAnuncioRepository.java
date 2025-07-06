@@ -4,6 +4,7 @@ package com.geovivienda.geovivienda.repositories;
 import com.geovivienda.geovivienda.entities.Anuncio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,4 +19,9 @@ public interface IAnuncioRepository extends JpaRepository<Anuncio, Integer> {
             "GROUP BY u.id_usuario, u.nombre ",
             nativeQuery = true)
     public List<String[]> cantidadAnunciosXUsuario();
+
+    @Query(value = "SELECT a FROM Anuncio a " +
+            " WHERE a.inmueble.idInmueble = :idInmueble")
+    public Anuncio buscarPorInmueble(@Param("idInmueble") int idInmueble);
+
 }

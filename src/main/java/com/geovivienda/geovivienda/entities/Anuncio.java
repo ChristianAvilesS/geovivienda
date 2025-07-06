@@ -16,7 +16,7 @@ public class Anuncio {
     @Column(name = "id_anuncio", nullable = false)
     private Integer idAnuncio;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_anunciante", nullable = false)
     private Usuario anunciante;
 
@@ -26,7 +26,7 @@ public class Anuncio {
     @Column(name = "fecha_publicacion")
     private LocalDateTime fechaPublicacion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_inmueble", nullable = false)
     private Inmueble inmueble;
 

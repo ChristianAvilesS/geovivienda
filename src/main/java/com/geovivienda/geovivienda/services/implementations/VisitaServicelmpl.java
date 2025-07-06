@@ -35,5 +35,35 @@ public class VisitaServicelmpl implements IVisitaService {
         return repos.buscarVisitaPorInmuebleYFecha(fecha, id);
     }
 
+    @Override
+    public List<Visita> listarPorUsuario(int idUsuario) {
+        return repos.listarPorUsuario(idUsuario);
+    }
+
+    @Override
+    public List<Visita> listarPorUsuarioHistorial(int idUsuario) {
+        return repos.listarPorUsuarioHistorial(idUsuario);
+    }
+
+    @Override
+    public List<Visita> listarPorUsuarioVendedor(int idUsuario) {
+        return repos.listarPorUsuarioVendedor(idUsuario);
+    }
+
+    @Override
+    public List<Visita> listarPorUsuarioVendedorHistorial(int idUsuario) {
+        return repos.listarPorUsuarioVendedorHistorial(idUsuario);
+    }
+
+    @Override
+    public void eliminarVisita(Visita visita) {
+        repos.delete(visita);
+    }
+
+    @Override
+    public boolean verificarCitaAgendadaUsuarioInmueble(int idUsuario, int idInmueble) {
+        return repos.verificarCitaAgendadaUsuarioInmueble(idUsuario, idInmueble);
+    }
+
 
 }

@@ -35,7 +35,6 @@ public class ValoracionController {
     private IInmuebleService inmuebleService;
 
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ADMIN')")
     public List<ValoracionDTO> listarValoraciones() {
         return servicio.listarValoraciones().stream()
                 .map(v -> modelM.map(v, ValoracionDTO.class)).collect(Collectors.toList());
@@ -71,12 +70,7 @@ public class ValoracionController {
         return ResponseEntity.ok(respuesta);
     }
 
-
-
-
-
     @GetMapping("/cantidadXInmueble")
-    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
     public List<ValoracionXInmuebleDTO> obtenerCantidadXInmueble() {
         List<ValoracionXInmuebleDTO> dtoLista = new ArrayList<>();
         List<String[]> filaLista = servicio.cantidadValoracionesXInmueble();
