@@ -1,5 +1,6 @@
 package com.geovivienda.geovivienda.controllers;
 
+import com.geovivienda.geovivienda.dtos.CambioPasswordDTO;
 import com.geovivienda.geovivienda.dtos.DireccionDTO;
 import com.geovivienda.geovivienda.dtos.UsuarioDevueltoDTO;
 import com.geovivienda.geovivienda.entities.Direccion;
@@ -12,6 +13,7 @@ import com.geovivienda.geovivienda.dtos.UsuarioDTO;
 import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.services.interfaces.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +35,8 @@ public class UsuarioController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired JwtAuthenticationController autenticador;
 
     @GetMapping
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -100,5 +104,16 @@ public class UsuarioController {
     public List<UsuarioDevueltoDTO> obtenerUsuariosNoEliminados() {
         return servicio.listarUsuariosNoEliminados().stream()
                 .map(p -> modelM.map(p, UsuarioDevueltoDTO.class)).collect(Collectors.toList());
+    }
+
+    @PatchMapping("/cambiar-password")
+    public ResponseEntity<Boolean> cambiarPassword(@RequestBody CambioPasswordDTO dto) {
+        try {
+            autenticador.authenticate(dto.getJwt().getUsername(), dto.getJwt().getPassword());
+            servicio.cambiarPassword(dto.getJwt().getUsername(), passwordEncoder.encode(dto.getNuevoPassword()));
+        } catch (Exception e) {
+            throw new RecursoNoEncontradoException(dto.getJwt().getUsername() + " " + dto.getJwt().getPassword());
+        }
+        return new ResponseEntity<>(true, HttpStatus.OK);
     }
 }
