@@ -18,7 +18,7 @@ public class Contrato {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_contrato", nullable = false)
-    private Integer idContrato;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
     @JoinColumn(name = "id_vendedor", referencedColumnName = "id_usuario", nullable = false)
@@ -46,5 +46,4 @@ public class Contrato {
 
     @Column(name = "fecha_vencimiento")
     private Instant fechaVencimiento;
-
 }

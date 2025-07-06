@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ContratoServiceImpl implements IContratoService {
@@ -21,8 +22,7 @@ public class ContratoServiceImpl implements IContratoService {
 
     @Override
     public Contrato buscarContratoPorId(Integer id) {
-        return repos.findById(id).orElse(null);
-    }
+        return repos.findById(id).orElseThrow(() -> new NoSuchElementException("Contrato no encontrado con ID: " + id));}
 
     @Override
     public Contrato guardarContrato(Contrato contrato) {
