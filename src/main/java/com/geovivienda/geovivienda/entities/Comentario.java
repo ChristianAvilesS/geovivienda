@@ -15,14 +15,14 @@ public class Comentario {
     @Column(name = "id_comentario", nullable = false)
     private Integer idComentario;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
     @Column(name = "descripcion", length = 200)
     private String descripcion;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_inmueble", nullable = false)
     private Inmueble inmueble;
 

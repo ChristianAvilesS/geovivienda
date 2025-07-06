@@ -20,4 +20,5 @@ public interface IInmuebleService {
                                     BigDecimal radio, String tipo);
     List<Inmueble> listarFavoritosPorUsuario(int idUsuario);
     List<Inmueble> listarDisponibles();
+    List<Inmueble> listarInmueblesPorUsuarioId(int idUsuario);
 }
