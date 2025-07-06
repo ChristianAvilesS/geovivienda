@@ -3,7 +3,11 @@ package com.geovivienda.geovivienda.controllers;
 
 import com.geovivienda.geovivienda.dtos.AnuncioDTO;
 import com.geovivienda.geovivienda.dtos.CantidadAnunciosXUsuarioDTO;
+import com.geovivienda.geovivienda.dtos.ComentarioDTO;
 import com.geovivienda.geovivienda.entities.Anuncio;
+import com.geovivienda.geovivienda.entities.Comentario;
+import com.geovivienda.geovivienda.entities.Inmueble;
+import com.geovivienda.geovivienda.entities.Usuario;
 import com.geovivienda.geovivienda.exceptions.RecursoNoEncontradoException;
 import com.geovivienda.geovivienda.services.interfaces.IAnuncioService;
 import com.geovivienda.geovivienda.services.interfaces.IInmuebleService;
@@ -14,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -37,6 +38,8 @@ public class AnuncioController {
     @GetMapping
     public List<AnuncioDTO> obtenerAnuncios() {
         return servicio.listarAnuncios().stream()
+                .sorted(Comparator.comparing(Anuncio::getFechaPublicacion).reversed())
+                .limit(20)
                 .map(p -> modelM.map(p, AnuncioDTO.class)).collect(Collectors.toList());
     }
 
@@ -44,6 +47,7 @@ public class AnuncioController {
     @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public AnuncioDTO agregarAnuncio(@RequestBody AnuncioDTO dto) {
         var anuncio = modelM.map(dto, Anuncio.class);
+        anuncio.setIdAnuncio(null);
         anuncio.setAnunciante(userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario()));
         anuncio.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
         return modelM.map(this.servicio.guardarAnuncio(anuncio), AnuncioDTO.class);
@@ -59,7 +63,6 @@ public class AnuncioController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Map<String, Boolean>> eliminarAnuncio(@PathVariable int id) {
         var anuncio = servicio.buscarAnuncioPorId(id);
         servicio.eliminarAnuncio(anuncio);
@@ -80,8 +83,28 @@ public class AnuncioController {
             dtoLista.add(dto);
         }
         return dtoLista;
-
     }
 
+    @PutMapping
+    public Anuncio editarAnuncio(@RequestBody AnuncioDTO dto) {
+        Inmueble inmueble = inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble());
+        Usuario usuario = userService.buscarUsuarioPorId(dto.getAnunciante().getIdUsuario());
+
+        Anuncio anuncio = new Anuncio();
+        anuncio.setIdAnuncio(dto.getIdAnuncio());
+        anuncio.setDescripcion(dto.getDescripcion());
+        anuncio.setInmueble(inmueble);
+        anuncio.setAnunciante(usuario);
+        anuncio.setFechaPublicacion(dto.getFechaPublicacion());
+
+        return servicio.actualizarAnuncio(anuncio);
+    }
+
+    @GetMapping("/buscarporinmueble")
+    public ResponseEntity<AnuncioDTO> buscarPorInmueble(@RequestParam int idInmueble) {
+        Anuncio anuncio = servicio.buscarPorInmueble(idInmueble);
+        AnuncioDTO dto = modelM.map(anuncio, AnuncioDTO.class);
+        return ResponseEntity.ok(dto);
+    }
 
 }

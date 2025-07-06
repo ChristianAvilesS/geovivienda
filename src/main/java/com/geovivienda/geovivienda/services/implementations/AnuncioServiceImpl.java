@@ -30,6 +30,11 @@ public class AnuncioServiceImpl implements IAnuncioService {
     }
 
     @Override
+    public Anuncio actualizarAnuncio(Anuncio anuncio) {
+        return repos.save(anuncio);
+    }
+
+    @Override
     public void eliminarAnuncio(Anuncio anuncio) {
         repos.delete(anuncio);
     }
@@ -37,5 +42,10 @@ public class AnuncioServiceImpl implements IAnuncioService {
     @Override
     public List<String[]> cantidadAnunciosXUsuario() {
         return repos.cantidadAnunciosXUsuario();
+    }
+
+    @Override
+    public Anuncio buscarPorInmueble(int idInmueble) {
+        return repos.buscarPorInmueble(idInmueble);
     }
 }

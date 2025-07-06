@@ -13,4 +13,16 @@ public interface IVisitaService {
     Visita guardarVisita(Visita visita);
 
     List<Visita> buscarVisitaPorInmuebleYFecha( Instant fecha, Integer id);
+
+    List<Visita> listarPorUsuario(int idUsuario);
+
+    List<Visita> listarPorUsuarioHistorial(int idUsuario);
+
+    List<Visita> listarPorUsuarioVendedor(int idUsuario);
+
+    List<Visita> listarPorUsuarioVendedorHistorial(int idUsuario);
+
+    void eliminarVisita(Visita visita);
+
+    boolean verificarCitaAgendadaUsuarioInmueble(int idUsuario, int idInmueble);
 }

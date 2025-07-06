@@ -9,7 +9,10 @@ public interface IAnuncioService {
     public Anuncio buscarAnuncioPorId (Integer idAnuncio);
 
     public Anuncio guardarAnuncio (Anuncio anuncio);
+    public Anuncio actualizarAnuncio (Anuncio anuncio);
     public void eliminarAnuncio (Anuncio anuncio);
 
     public List<String[]> cantidadAnunciosXUsuario();
+
+    public Anuncio buscarPorInmueble(int idInmueble);
 }
