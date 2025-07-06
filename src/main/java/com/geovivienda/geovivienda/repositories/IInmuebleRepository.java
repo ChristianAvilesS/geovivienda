@@ -21,6 +21,14 @@ public interface IInmuebleRepository extends JpaRepository<Inmueble, Integer> {
     List<Inmueble> buscarInmueblesEnLugarEnRango(@Param("lon") BigDecimal lon, @Param("lat") BigDecimal lat,
                                                  @Param("rango") BigDecimal rango);
 
+    @Query("SELECT i FROM Inmueble i\n" +
+            " JOIN InmuebleUsuario iu ON iu.inmueble.idInmueble = i.idInmueble \n" +
+            " WHERE iu.esDuenio = true \n" +
+            " AND iu.usuario.idUsuario = :idUsuario \n" +
+            " AND i.estado != 'ELIMINADO'\n" +
+            " ORDER BY i.idInmueble")
+    List<Inmueble> listarInmueblesPorUsuarioId(@Param("idUsuario") int idUsuario);
+
     @Query(value = "select i from Inmueble i join Direccion d on i.direccion.idDireccion = d.idDireccion \n" +
             " where d.longitud between (:longitud - :rango) and (:longitud + :rango) and\n" +
             " d.latitud between (:latitud -:rango) and (:latitud + :rango) and \n" +

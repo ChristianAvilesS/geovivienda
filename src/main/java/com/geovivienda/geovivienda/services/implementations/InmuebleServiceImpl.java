@@ -69,5 +69,10 @@ public class InmuebleServiceImpl implements IInmuebleService {
         return repos.listarDisponibles();
     }
 
+    @Override
+    public List<Inmueble> listarInmueblesPorUsuarioId(int idUsuario) {
+        return repos.listarInmueblesPorUsuarioId(idUsuario);
+    }
+
 
 }

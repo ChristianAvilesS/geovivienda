@@ -38,6 +38,11 @@ public class ComentarioServicelmpl implements  IComentarioService {
     }
 
     @Override
+    public void eliminarComentario(Comentario comentario) {
+        repos.delete(comentario);
+    }
+
+    @Override
     public List<Comentario> findByInmueble(int idInmueble) {
         return repos.findByInmueble(idInmueble);
     }

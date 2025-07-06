@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ComentarioDTO {
-    private Integer id;
+    private Integer idComentario;
     private String descripcion;
     private Usuario usuario;
     private Inmueble inmueble;

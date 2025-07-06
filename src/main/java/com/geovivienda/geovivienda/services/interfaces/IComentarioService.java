@@ -2,6 +2,7 @@ package com.geovivienda.geovivienda.services.interfaces;
 
 import com.geovivienda.geovivienda.entities.Comentario;
 import com.geovivienda.geovivienda.entities.Inmueble;
+import com.geovivienda.geovivienda.entities.InmuebleUsuario;
 
 import java.util.List;
 
@@ -13,6 +14,8 @@ public interface IComentarioService {
     Comentario editarComentario(Comentario comentario);
 
     Comentario guardarComentario(Comentario comentario);
+
+    void eliminarComentario(Comentario comentario);
 
     List<Comentario> findByInmueble(int idInmueble);
 
