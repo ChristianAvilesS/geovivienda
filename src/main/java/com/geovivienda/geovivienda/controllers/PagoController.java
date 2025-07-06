@@ -47,7 +47,11 @@ public class PagoController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public PagoDTO agregarPago(@RequestBody PagoDTO dto) { // Insertar
         Pago p = modelM.map(dto, Pago.class);
-        p.setContrato(contratoService.buscarContratoPorId(dto.getContrato().getIdContrato()));
+        if (dto.getContrato() != null) {
+            p.setContrato(contratoService.buscarContratoPorId(dto.getContrato().getId()));
+        } else {
+            throw new IllegalArgumentException("El contrato no puede ser nulo");
+        }
         return modelM.map(servicio.guardarPago(p), PagoDTO.class); // Regresa el pago con el id generado
     }
     @PutMapping("/{id}")
