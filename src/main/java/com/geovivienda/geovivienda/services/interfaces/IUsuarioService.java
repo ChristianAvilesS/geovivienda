@@ -15,4 +15,5 @@ public interface IUsuarioService {
     Usuario insertarUsuarioYRol(Usuario usuario, int rol);
     Usuario eliminarUsuario(Usuario usuario);
     List<Usuario> listarUsuariosNoEliminados();
+    void cambiarPassword(String username, String password);
 }

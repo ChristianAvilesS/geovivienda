@@ -62,6 +62,20 @@ public class InmuebleController {
         return inmuebles;
     }
 
+    @GetMapping("/listarporusuario")
+    public List<InmuebleDTO> listarPorUsuario(@RequestParam int idUsuario) {
+        log.info("\nInicio de recuperación de inmuebles\n");
+
+        var inmuebles = servicio.listarInmueblesPorUsuarioId(idUsuario).stream().map(p -> modelM.map(p, InmuebleDTO.class))
+                .collect(Collectors.toList());
+
+        log.info("\nInmuebles:");
+        inmuebles.forEach(p -> log.info("{}", p));
+
+        log.info("\nFin de recuperación de inmuebles\n");
+        return inmuebles;
+    }
+
     @PostMapping
     @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public InmuebleDTO agregarInmueble(@RequestBody InmuebleDTO dto) {
@@ -127,12 +141,12 @@ public class InmuebleController {
     }
 
     @GetMapping("/inmuebles_en_direccion")
-    public List<InmuebleDireccionDTO> obtenerInmueblesCercaADireccion(@RequestParam("dir") String dir,
+    public List<InmuebleDTO> obtenerInmueblesCercaADireccion(@RequestParam("dir") String dir,
                                                                       @RequestParam("rango") BigDecimal rango) {
         log.info("\nInicio de query de búsqueda de inmuebles cerca a una dirección inmueble\n");
         DireccionDTO direccion = getDireccionFromAPI(dir);
         var resultado = servicio.buscarInmueblesEnLugarEnRango(direccion.getLongitud(),
-                direccion.getLatitud(), rango).stream().map(this::createInmuebleDireccionDTO).toList();
+                direccion.getLatitud(), rango).stream().map(i-> modelM.map(i, InmuebleDTO.class)).collect(Collectors.toList());
         log.info("Resultado:");
         resultado.forEach(i -> log.info("{}", i));
         return resultado;
@@ -152,7 +166,7 @@ public class InmuebleController {
     }
 
     @GetMapping("/filtrado")
-    public List<InmuebleDireccionDTO> filtrarInmueblesRangoArea(@RequestParam(value = "minArea", required = false)
+    public List<InmuebleDTO> filtrarInmueblesRangoArea(@RequestParam(value = "minArea", required = false)
                                                                 BigDecimal minArea,
                                                                 @RequestParam(value = "maxArea", required = false)
                                                                 BigDecimal maxArea,
@@ -169,18 +183,18 @@ public class InmuebleController {
         log.info("\nInicio de query de filtrado de inmuebles\n");
 
         var resultado = servicio.filtrarInmuebles(minArea, maxArea, minPrecio, maxPrecio, latitud, longitud, radio, tipo)
-                .stream().map(this::createInmuebleDireccionDTO).toList();
+                .stream().map(i-> modelM.map(i, InmuebleDTO.class)).collect(Collectors.toList());
         log.info("Resultado:");
         resultado.forEach(i -> log.info("{}", i));
         return resultado;
     }
 
     @GetMapping("/favoritos")
-    public List<InmuebleDireccionDTO> mostrarFavoritos(@RequestParam("idUsuario") int idUsuario) {
+    public List<InmuebleDTO> mostrarFavoritos(@RequestParam("idUsuario") int idUsuario) {
         log.info("\nInicio de query de inmuebles favoritos\n");
         var resultado = servicio.listarFavoritosPorUsuario(idUsuario)
                 .stream()
-                .map(this::createInmuebleDireccionDTO).toList();
+                .map(i->modelM.map(i,InmuebleDTO.class)).collect(Collectors.toList());
         log.info("Resultado:");
         resultado.forEach(i -> log.info("{}", i));
         return resultado;

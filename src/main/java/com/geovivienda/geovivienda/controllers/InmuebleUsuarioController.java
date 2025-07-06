@@ -67,13 +67,19 @@ public class InmuebleUsuarioController {
     }
 
     @GetMapping("/buscar")
-    public ResponseEntity<InmuebleUsuarioDTO> obtenerInmuebleUsuarioPorId(@RequestBody InmuebleUsuarioId id) {
+    public ResponseEntity<InmuebleUsuarioDTO> obtenerInmuebleUsuarioPorId(
+            @RequestParam int idInmueble,
+            @RequestParam int idUsuario) {
+        InmuebleUsuarioId id = new InmuebleUsuarioId();
+        id.setIdInmueble(idInmueble);
+        id.setIdUsuario(idUsuario);
         InmuebleUsuario inmuebleUsuario = servicio.buscarInmuebleUsuarioPorId(id);
-        if(inmuebleUsuario != null){
+        if (inmuebleUsuario != null) {
             return ResponseEntity.ok(modelM.map(inmuebleUsuario, InmuebleUsuarioDTO.class));
         }
         throw new RecursoNoEncontradoException("No se encontró el id: " + id);
     }
+
 
     @GetMapping("/duenio/{idInmueble}")
     public ResponseEntity<InmuebleUsuarioDTO> obtenerUsuarioDuenio(@PathVariable int idInmueble) {
@@ -94,12 +100,34 @@ public class InmuebleUsuarioController {
     }
 
     @PutMapping("/marcardesmarcarfavorito")
-    public ResponseEntity<Map<String,Boolean>> marcarDesmarcarFavorito(@RequestParam int idInmueble, @RequestParam int idUsuario) {
-        var inmuebleUsuario = servicio.marcarDesmarcarFavorito(idInmueble, idUsuario);
-        Map<String,Boolean> respuesta = new HashMap<>();
-        respuesta.put("esFavorito", inmuebleUsuario.getEsFavorito());
-        return ResponseEntity.ok(respuesta);
+    public ResponseEntity<InmuebleUsuarioDTO> marcarDesmarcarFavorito(@RequestParam int idInmueble, @RequestParam int idUsuario) {
+        InmuebleUsuarioId id = new InmuebleUsuarioId();
+        id.setIdInmueble(idInmueble);
+        id.setIdUsuario(idUsuario);
+
+        // Buscar si ya existe la relación Inmueble-Usuario
+        InmuebleUsuario existente = servicio.buscarInmuebleUsuarioPorId(id);
+
+        if (existente == null) {
+            // Crear relación nueva con estado inicial
+            InmuebleUsuario nuevo = new InmuebleUsuario();
+            nuevo.setId(id);
+            nuevo.setUsuario(usuarioService.buscarUsuarioPorId(idUsuario));
+            nuevo.setInmueble(inmuebleService.buscarInmueblePorId(idInmueble));
+            nuevo.setEsFavorito(false);
+            nuevo.setEsDuenio(false);
+            nuevo.setEstadoSolicitud("NINGUNO");
+            nuevo.setFechaSolicitud(LocalDate.now());
+            servicio.guardarInmuebleUsuario(nuevo);
+        }
+
+        // Alternar favorito (crear si no existe o actualizar si existe)
+        InmuebleUsuario actualizado = servicio.marcarDesmarcarFavorito(idInmueble, idUsuario);
+
+
+        return ResponseEntity.ok(modelM.map(actualizado, InmuebleUsuarioDTO.class));
     }
+
 
     @PutMapping("/solicitarcomprainmueble")
     public ResponseEntity<InmuebleUsuarioDTO> solicitarCompraInmueble(@RequestParam int idInmueble,

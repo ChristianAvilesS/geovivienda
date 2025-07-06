@@ -64,7 +64,7 @@ public class RolController {
         return ResponseEntity.ok(respuesta);
     }
 
-    @GetMapping("/")
+    @GetMapping("/rol-nombre")
     @PreAuthorize("hasAuthority('ADMIN')")
     public RolDTO buscarRolPorNombre(@RequestParam String nombre) {
         return modelM.map(this.servicio.buscarRolPorNombre(nombre), RolDTO.class);
