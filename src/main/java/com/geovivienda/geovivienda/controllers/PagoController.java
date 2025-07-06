@@ -44,7 +44,6 @@ public class PagoController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAuthority('ADMIN')")
     public PagoDTO agregarPago(@RequestBody PagoDTO dto) { // Insertar
         Pago p = modelM.map(dto, Pago.class);
         if (dto.getContrato() != null) {
