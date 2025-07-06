@@ -40,9 +40,9 @@ public class ContratoController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('VENDEDOR', 'ADMIN')")
     public ContratoDTO agregarContrato(@RequestBody ContratoDTO dto){
         var contrato = modelM.map(dto, Contrato.class);
+        contrato.setId(null);
         contrato.setComprador(userService.buscarUsuarioPorId(dto.getComprador().getIdUsuario()));
         contrato.setInmueble(inmuebleService.buscarInmueblePorId(dto.getInmueble().getIdInmueble()));
         contrato.setVendedor(userService.buscarUsuarioPorId(dto.getVendedor().getIdUsuario()));
