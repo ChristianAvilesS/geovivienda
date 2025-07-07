@@ -50,21 +50,21 @@ public class CORS implements Filter {
         String origin = request.getHeader("Origin");
         String method = request.getMethod();
 
-        // Validar si el origen es el de tu frontend o empieza con https://api.geoapify.com
-        boolean isAllowedOrigin = origin != null && (
-                origin.equals("https://geovivienda-app.onrender.com") ||
-                        origin.startsWith("https://api.geoapify.com")
+        // Lista de orígenes permitidos
+        List<String> allowedOrigins = Arrays.asList(
+                "https://geovivienda-app.vercel.app",
+                "https://api.geoapify.com"
         );
 
-        if (isAllowedOrigin) {
+        if (origin != null && allowedOrigins.contains(origin)) {
             response.setHeader("Access-Control-Allow-Origin", origin);
-            response.setHeader("Vary", "Origin"); // para que proxies cacheen correctamente
+            response.setHeader("Vary", "Origin");
         } else {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "Origin not allowed");
             return;
         }
 
-        response.setHeader("Access-Control-Allow-Methods", "DELETE, GET, OPTIONS, PATCH, POST, PUT");
+        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Headers",
                 "x-requested-with, authorization, Content-Type, Authorization, credential, X-XSRF-TOKEN");
@@ -76,6 +76,7 @@ public class CORS implements Filter {
 
         chain.doFilter(req, res);
     }
+
 
 
 
