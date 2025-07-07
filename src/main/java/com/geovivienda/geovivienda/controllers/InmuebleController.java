@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,15 +39,20 @@ public class InmuebleController {
     public List<InmuebleDTO> obtenerInmuebles() {
         log.info("\nInicio de recuperación de inmuebles\n");
 
-        var inmuebles = servicio.listarInmuebles().stream().map(p -> modelM.map(p, InmuebleDTO.class))
+        var inmuebles = servicio.listarInmuebles();
+        Collections.reverse(inmuebles); // Invertir la lista
+
+        var inmueblesDTO = inmuebles.stream()
+                .map(p -> modelM.map(p, InmuebleDTO.class))
                 .collect(Collectors.toList());
 
         log.info("\nInmuebles:");
-        inmuebles.forEach(p -> log.info("{}", p));
+        inmueblesDTO.forEach(p -> log.info("{}", p));
 
         log.info("\nFin de recuperación de inmuebles\n");
-        return inmuebles;
+        return inmueblesDTO;
     }
+
 
     @GetMapping("/listado-logico")
     public List<InmuebleDTO> listarDisponibles() {
