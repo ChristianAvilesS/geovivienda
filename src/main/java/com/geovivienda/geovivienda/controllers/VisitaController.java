@@ -64,7 +64,6 @@ public class VisitaController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyAuthority('COMPRADOR', 'ARRENDATARIO', 'ADMIN')")
     public VisitaDTO agregarVisita(@RequestBody VisitaDTO dto) {
         var visita = modelM.map(dto, Visita.class);
         visita.setIdVisita(null);
