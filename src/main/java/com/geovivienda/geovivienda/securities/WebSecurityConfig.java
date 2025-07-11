@@ -65,6 +65,7 @@ public class WebSecurityConfig {
                         .requestMatchers(antMatcher(HttpMethod.POST, "/geovivienda/rolesusuario")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.GET, "/geovivienda/imagenes/**")).permitAll()
                         .requestMatchers(antMatcher(HttpMethod.GET, "/geovivienda/inmuebles/**")).permitAll()
+                        .requestMatchers(antMatcher(HttpMethod.GET, "/geovivienda/valoracion/promediovaloracion")).permitAll()
                         .requestMatchers("/uploads/**").permitAll()
 
                         .requestMatchers(
